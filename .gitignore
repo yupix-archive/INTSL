@@ -1,0 +1,17 @@
+*.jar
+config.txt
+.directory
+outdate.txt
+password.txt
+newversion.txt
+serversettings.json
+config-back.txt
+outdata.txt
+nokori.txt
+world
+*log
+*gz
+*json
+*properties
+mc.txt
+hidden

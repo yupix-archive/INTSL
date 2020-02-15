@@ -1,0 +1,16 @@
+#!/bin/bash
+cd $FILE_SERVER_NAME
+SCREEN_NAME=`pwgen`
+
+cat <<EOF >setting.txt
+test=''unnti'_MEM_MIN=20G'
+${FILE_SERVER_NAME}_SERVER_PATH="./unnti"
+${FILE_SERVER_NAME}_JVM_ARGUMENT="-Xmx -Xms"
+${FILE_SERVER_NAME}_MEM_MAX=20G
+${FILE_SERVER_NAME}_MEM_MIN=20G
+${FILE_SERVER_NAME}_JAVA_HOME=java
+${FILE_SERVER_NAME}_SCREEN_NAME="${SCREEN_NAME}"
+test_pid=""
+#ステータス
+STATUS="online"
+EOF

@@ -1,0 +1,84 @@
+#------------------------------------------------------------------------------#
+#メッセージ関係
+BOTSTART="Music Bot is starting!!"
+ENDSERVICE="サービスを終了します..."
+FILEDELETE="ファイルを削除しました"
+SERVICECHECK="サービスが終了したか確認しています"
+SERVICEALIVE="サービスは終了していません、終了しますか?"
+SERVICEDEAD="サービスの終了を確認しました"
+STARTDEVELOPERMODE="開発者モードで起動します"
+DEVELOPERMODEWARNING="開発者モードは仕様の都合上旧コードをそのまま流用しています。\そのため、startコマンドとは仕様が違います。"
+remainingtimeone="残り1秒"
+remainingtimetwo="残り2秒"
+remainingtimethree="残り3秒"
+SYSTEMSTART="SYSTEMを開始します"
+
+##ファイルの有無系
+FILECHECKSUCCSESS="ファイルが存在します"
+FILECHECKFAILED="ファイルが存在しません"
+##ファイル作成系
+FILECREATESTART="ファイルの生成を開始します"
+FILECREATESUCCESS="ファイルの作成に成功しました"
+##ファイルの削除系
+FILEDELETESTART="ファイルの削除を開始しました"
+FILEDELETESUCCESS="ファイルの削除に成功しました"
+FILEDELETEFAILED="ファイルの削除に失敗しました"
+##ファイルのダウンロード系
+FILEDOWNLOADSTART="ファイルのダウンロードを開始しました"
+FILEDOWNLOADUCCESS="ファイルのダウンロードに成功しました"
+FILEDOWNLOADFAILED="ファイルのダウンロードに失敗しました"
+
+
+
+#depricated
+#ファイル関係メッセージ
+FILEDELETED="ファイルを削除しますか? (y/n):"
+FILETRUE="ファイルが存在します"
+FILEFALSE="ファイルが存在しません"
+FAILNOTFOUND="ファイルが存在しません"
+JARFALSE="JARファイルが存在しません"
+FILEDOWNLOAD="ファイルをダウンロードしますか? (y/n):"
+FILEDOWNLOADNOW="ファイルをダウンロードしています"
+#ファイルの生成系
+FILECREATESUCCESS="ファイルの生成に成功しました"
+FILECREATEFAILED="ファイルの生成に失敗しました"
+FAILEDELETENOW="ファイルを削除しています..."
+FAILECREATE="ファイルを作成します"
+
+#ヘルプ表示メッセージ
+commandhelp="コマンド | 使い方"
+maincommand="メインコマンド~~"
+startcommand="start: musicBotをスタートします。"
+startdev="start -d: MusicBot実行時のログをコンソールに出力します"
+removecommand="remove: MusicBot本体を削除します"
+commandhelpbot="Botコマンド~~"
+tokencommand="token: 現在使用しているTokenを表示します"
+settokencommand="settoken: Tokenを設定します"
+prefixcommand="prefix: 現在使用しているprefixを表示します"
+statuscommand="status: MusicBotのステータスを表示します"
+configcommand="CONFIG関係~~"
+cccommand="createconfig: Token等の必要データをまとめたファイルを生成します"
+reconfigcommand="reconfig: createconfigで生成したファイルを再生成します"
+cleanCcommand="cleanconfig: createconfigで生成したファイルを削除します"
+
+#ヘルプ表示メッセージ 変数一覧
+#commandhelp
+#maincommand
+#startcommand
+#startdev
+#removecommand
+#commandhelpbot
+#tokencommand
+#settokencommand
+#prefixcommand
+#statuscommand
+#configcommand
+#configcommand
+#cccommand
+#reconfigcommand
+#cleanCcommand
+#------------------------------------------------------------------------------#
+#旧設定
+#JAR="/home/$USER/デスクトップ/disocrd/musicbot/JMusicBot-$VERSION-$EDITION.jar"
+#FILE="/home/$USER/デスクトップ/disocrd/musicbot/"
+#------------------------------------------------------------------------------#

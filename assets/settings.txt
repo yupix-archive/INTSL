@@ -1,0 +1,30 @@
+#初回起動時要設定(絶対に弄らないでください)
+firststart="0"
+
+#BOTを起動した際にVercheckを走らせるかどうか (default = yes)
+setting_VersionCheck="yes"
+
+#BOTを起動した際に招待リンクを表示するかどうか (default = yes)
+setting_botinvite="yes"
+
+#BOTを起動した際にTOKEN等の情報を更新するかどうか (default = yes)
+setting_outputdata="yes"
+
+#バックアップを行うか否か (default = yes)
+setting_backuptime="yes"
+
+#バックアップの出力先(default= ../)
+
+#誤っても変更しないでください。
+#この行を変更するとほぼ確実にきちんとした動作が行えなくなります。
+#理由としてはこれは本体の特定の行にテキストを追加する際に使用する変数のため、
+#きちんと動作する所を予め確認してから変更しないと、行の間に挿入されてしまい、おかしいことになります。
+SERVERLANE="785"
+
+#最大リトライ数
+RETRYMAX="3"
+
+SETTING_CONSOLE_LOG="false"
+
+#CLIENT_ID
+CLIENT_ID=""
