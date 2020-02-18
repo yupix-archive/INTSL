@@ -1,5 +1,5 @@
-![AUTOMUSICBOT](https://akari.fiid.net/images/AUTOMUSICBOT.jpg "Image")
-# amb
+![AUTOMUSICBOT](https://akarinext.org/images/intsl.jpg "Image")
+# INTSL
 IntegrationShell(統合シェル)
 このProjectは私が元々開発していた[amb](https://github.com/yupix.amb/)Projectを合わせ、
 Minecraftのサーバー作成補助等様々な開発者やサーバー運営者にとって作業の効率化が行える様な物を
