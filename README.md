@@ -1,4 +1,4 @@
-![AUTOMUSICBOT](https://akarinext.org/images/intsl.jpg "Image")
+![IntegrationShell](https://akarinext.org/images/intsl.png "Image")
 # INTSL
 IntegrationShell(統合シェル)
 このProjectは私が元々開発していた[amb](https://github.com/yupix.amb/)Projectを合わせ、
