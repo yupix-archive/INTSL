@@ -12,7 +12,7 @@ if [ ! -e $SERVER_JARLIST_PATH\server$mc_donwload_version.jar ]; then
         case $INPUT_Y_OR_N in
         [yY]*)
             SPINNER_FILEDOWNLOAD
-            wget -q https://launcher.mojang.com/v1/objects/d8321edc9470e56b8ad5c67bbd16beba25843336/server.jar -O $SERVER_JARLIST_PATH\server$mc_donwload_version.jar
+            wget -q https://papermc.io/api/v1/paper/1.8.8/443/download -O $SERVER_JARLIST_PATH\server$mc_donwload_version.jar
             SPINNER_FILECHECK
             if [ -e $SERVER_JARLIST_PATH\server$mc_donwload_version.jar ]; then
                 JARDOWNLOADSUCCESS
