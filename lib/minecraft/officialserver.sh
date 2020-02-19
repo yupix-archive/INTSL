@@ -3,9 +3,8 @@ while :; do
     read -p ">" INPUT_SERVER_VERSION
     case $INPUT_SERVER_VERSION in
     1.2.5)
-        chmod 755 ./lib/minecraft/officialserverlist/v1.2.5.sh
-        . ./lib/minecraft/officialserverlist/v1.2.5.sh
-        SERVER_CREATE
+        JAR_URL="https://launcher.mojang.com/v1/objects/d8321edc9470e56b8ad5c67bbd16beba25843336/server.jar"
+        break
         ;;
     1.3.1)
         chmod 755 ./lib/minecraft/officialserverlist/v1.3.1.sh
