@@ -112,6 +112,9 @@ JMusicBotの作者様、その他の関係者様等の方々がいて
 1.15.1
 1.15.2
 </details>
+<summary>PaperServer</summary>
+現在対応中
+</details>
 
 ## SpecialThanks
 本Projectを作るきっかけとなった物です、この場で心より感謝申し上げます。
