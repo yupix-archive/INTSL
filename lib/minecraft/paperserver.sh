@@ -2,50 +2,42 @@
 while :; do
     read -p ">" INPUT_SERVER_VERSION
     case $INPUT_SERVER_VERSION in
-    1.7.10)
-        chmod 755 ./lib/minecraft/officialserverlist/v1.7.10.sh
-        . ./lib/minecraft/officialserverlist/v1.7.10.sh
-        SERVER_CREATE
+    1.7.10) #対応予定有り
+        echo "対応予定有り"
+        #JAR_URL=""
+        #break
         ;;
     1.8.8)
-        chmod 755 ./lib/minecraft/officialserverlist/v1.8.8.sh
-        . ./lib/minecraft/officialserverlist/v1.8.8.sh
-        SERVER_CREATE
+        JAR_URL="https://papermc.io/api/v1/paper/1.8.8/443/download"
+        break
         ;;
     1.9.4)
-        chmod 755 ./lib/minecraft/officialserverlist/v1.9.4.sh
-        . ./lib/minecraft/officialserverlist/v1.9.4.sh
-        SERVER_CREATE
+        JAR_URL="https://papermc.io/api/v1/paper/1.9.4/773/download"
+        break
         ;;
     1.10.2)
-        chmod 755 ./lib/minecraft/officialserverlist/v1.10.2.sh
-        . ./lib/minecraft/officialserverlist/v1.10.2.sh
-        SERVER_CREATE
+        JAR_URL="https://papermc.io/api/v1/paper/1.10.2/916/download"
+        break
         ;;
     1.11.2)
-        chmod 755 ./lib/minecraft/officialserverlist/v1.11.2.sh
-        . ./lib/minecraft/officialserverlist/v1.11.2.sh
-        SERVER_CREATE
+        JAR_URL="https://papermc.io/api/v1/paper/1.11.2/1104/download"
+        break
         ;;
     1.12.2)
-        chmod 755 ./lib/minecraft/officialserverlist/v1.12.2.sh
-        . ./lib/minecraft/officialserverlist/v1.12.2.sh
-        SERVER_CREATE
+        JAR_URL="https://papermc.io/api/v1/paper/1.12.2/1618/download"
+        break
         ;;
     1.13.2)
-        chmod 755 ./lib/minecraft/officialserverlist/v1.13.2.sh
-        . ./lib/minecraft/officialserverlist/v1.13.2.sh
-        SERVER_CREATE
+        JAR_URL="https://papermc.io/api/v1/paper/1.13.2/655/download"
+        break
         ;;
     1.14.4)
-        chmod 755 ./lib/minecraft/officialserverlist/v1.14.4.sh
-        . ./lib/minecraft/officialserverlist/v1.14.4.sh
-        SERVER_CREATE
+        JAR_URL="https://papermc.io/api/v1/paper/1.14.4/243/download"
+        break
         ;;
     1.15.2)
-        chmod 755 ./lib/minecraft/paperserverlist/v1.15.2.sh
-        . ./lib/minecraft/officialserverlist/v1.15.2.sh
-        SERVER_CREATE
+        JAR_URL="https://papermc.io/api/v1/paper/1.15.2/112/download"
+        break
         ;;
 
     *)
