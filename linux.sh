@@ -416,7 +416,7 @@ systemstart() {
 }
 SPINNER() {
     for ((i = 0; i < ${#chars}; i++)); do
-        sleep 0.2
+        sleep 0.05
         echo -en "${chars:$i:1} $PROGRESS_STATUS " "\r"
     done
 }
@@ -760,54 +760,12 @@ mc)
             case $INPUT_SERVER_TYPE in
             [1])
                 echo "OfficialServer"
-                echo "VersionList: 1.2.5"
+                echo -e "VersionList: | \033[1;37m1.2.5\033[0;39m | \033[1;37m1.3.1\033[0;39m | \033[1;37m1.3.2\033[0;39m | \033[1;37m1.4.2\033[0;39m | \033[1;37m1.4.4\033[0;39m | \033[1;37m1.4.5\033[0;39m | \033[1;37m1.4.6\033[0;39m | \033[1;37m1.4.7\033[0;39m | \033[1;37m1.5.2\033[0;39m | \033[1;37m1.5.2\033[0;39m | \033[1;37m1.6.1\033[0;39m | \033[1;37m1.6.2\033[0;39m | \033[1;37m1.6.4\033[0;39m |"
+                echo -e "| \033[1;37m1.7.2\033[0;39m | \033[1;37m1.7.5\033[0;39m | \033[1;37m1.7.6\033[0;39m | \033[1;37m1.7.7\033[0;39m | \033[1;37m1.7.8\033[0;39m | \033[1;37m1.7.9\033[0;39m | \033[1;37m1.7.10\033[0;39m | \033[1;37m1.8\033[0;39m | \033[1;37m1.8.1\033[0;39m | \033[1;37m1.8.2\033[0;39m | \033[1;37m1.8.3\033[0;39m | \033[1;37m1.8.4\033[0;39m | \033[1;37m1.8.5\033[0;39m | \033[1;37m1.8.6\033[0;39m | \033[1;37m1.8.7\033[0;39m | \033[1;37m1.8.8\033[0;39m | \033[1;37m1.8.9\033[0;39m |"
+                echo -e "| \033[1;37m1.9\033[0;39m | \033[1;37m1.9.1\033[0;39m | \033[1;37m1.9.2\033[0;39m | \033[1;37m1.9.3\033[0;39m | \033[1;37m1.9.4\033[0;39m | \033[1;37m1.10\033[0;39m | \033[1;37m1.10.1\033[0;39m | \033[1;37m1.10.2\033[0;39m | \033[1;37m1.11\033[0;39m | \033[1;37m1.11.1\033[0;39m | \033[1;37m1.11.2\033[0;39m | \033[1;37m1.12\033[0;39m | \033[1;37m1.12.1\033[0;39m | \033[1;37m1.12.2\033[0;39m | \033[1;37m1.13\033[0;39m | \033[1;37m1.13.1\033[0;39m | \033[1;37m1.13.2\033[0;39m |"
+                echo -e "| \033[1;37m1.14\033[0;39m | \033[1;37m1.14.1\033[0;39m | \033[1;37m1.14.2\033[0;39m | \033[1;37m1.14.3\033[0;39m | \033[1;37m1.14.4\033[0;39m | \033[1;37m1.15\033[0;39m | \033[1;37m1.15.1\033[0;39m | \033[1;37m1.15.2\033[0;39m |"
                 . ./lib/minecraft/officialserver.sh
-                echo "$INPUT_SERVER_VERSION"
-                mc_donwload_version="$INPUT_SERVER_VERSION"
-                echo "$mc_donwload_version"
-                PROGRESS_STATUS="ファイルの確認中"
-                SPINNER
-                if [ ! -e ${SERVER_JARLIST_PATH}server$mc_donwload_version.jar ]; then
-                    echo "jarファイルが存在しません!ファイルをダウンロードしますか?"
-                    echo "使用可能 (Y)es or (N)o default(Yes)"
-                    while :; do
-                        if [[ -e $SERVER_JARLIST_PATH\server$mc_donwload_version.jar ]]; then
-                            echo "あるよ"
-                            break
-                        else
-                            read -p ">" INPUT_Y_OR_N
-                            INPUT_Y_OR_N=${INPUT_Y_OR_N:-y}
-                            echo $INPUT_Y_OR_N
-                            case $INPUT_Y_OR_N in
-                            [yY]*)
-                                while :; do
-                                    PROGRESS_STATUS="ファイルのダウンロード中"
-                                    SPINNER
-                                    if [ -e ${SERVER_JARLIST_PATH}server$mc_donwload_version.jar ]; then
-                                        JARDOWNLOADSUCCESS
-                                        break
-                                    else
-                                        if [[ $wgetpid != 0 ]]; then
-                                            wget -q $JAR_URL -O $SERVER_JARLIST_PATH\server$mc_donwload_version.jar &
-                                            pid=$wgetpid
-                                            count=$(ps x -ef | grep $ProcessName | grep -v grep | wc -l)
-                                            RETRYCOUNT=$((RETRYCOUNT + 1))
-                                        fi
-                                    fi
-                                done
-                                ;;
-                            [nN]*)
-                                DONWLOAD_CANCELLATION
-                                ;;
-                            *)
-                                echo "(Y)esまたは(N)oを入力してください"
-                                ;;
-                            esac
-                        fi
-                    done
-                else
-                    echo "JARファイルが存在します"
-                fi
+                . ./lib/minecraft/olsr_dr.sh
                 exit 0
                 ;;
             [2])
@@ -828,8 +786,8 @@ mc)
             read -p ">" serverstartlist
             case $serverstartlist in
 
-            \
-                \
+
+
                 *)
                 #不正なキー入力
                 echo "上記に出ているコマンドを入力してください。"
