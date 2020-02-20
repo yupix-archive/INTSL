@@ -47,35 +47,65 @@ SERVER_PAPERLIST_PATH="./minecraft/versionlist/paper/"
 #------------------------------------------------------------------------------#
 
 #コマンド
-
+#設定の数
+SETTING_MAX="4"
 firststart() {
     if [ $firststart = 0 ]; then
-        echo "AMBPROJECTをインストールしていただきありがとうございます。"
+        sed -i -e 's/firststart="'$firststart'"/firststart="'1'"/' ./assets/settings.txt
+        echo "INTSLをインストールしていただきありがとうございます。"
         echo "本Projectを自分好みに動かすために初期設定を行うことを推奨します"
         echo "使用可能 (y)es (n)o"
         while :; do
             read INPUT_DATA
-            if [ $INPUT_DATA = y ]; then
-                sed -i -e 's/firststart="'$firststart'"/firststart="'1'"/' ./assets/settings.txt
-                echo "#BOTを起動した際にVercheckを走らせるかどうか (default = yes)"
-                read firstsetting1
-                sed -i -e 's/setting_VersionCheck="'$setting_VersionCheck'"/setting_VersionCheck="'$firstsetting1'"/' ./assets/settings.txt
-                echo "BOTを起動した際に招待リンクを表示するかどうか (default = yes)"
-                read firstsetting2
-                sed -i -e 's/setting_botinvite="'$setting_botinvite'"/setting_botinvite="'$firstsetting2'"/' ./assets/settings.txt
-                echo "BOTを起動した際にTOKEN等の情報を更新するかどうか (default = yes)"
-                read firstsetting3
-                sed -i -e 's/setting_outputdata="'$setting_outputdata'"/setting_outputdata="'$firstsetting3'"/' ./assets/settings.txt
-                echo "バックアップを行うか否か (default = yes)"
-                read firstsetting4
-                sed -i -e 's/setting_backuptime="'$setting_backuptime'"/setting_backuptime="'$firstsetting4'"/' ./assets/settings.txt
-                echo "これで初期設定は終わりです、お疲れ様でした。"
-                echo "この他にもExtension等様々な物の有効化方法が有りますが、詳しくは https://akari.fiid.net/dev/amb/top をご覧ください!"
-                echo "それでは良いDiscordBotライフを!"
-                sleep 10
+            if [ $INPUT_DATA = yes ]; then
+                while :; do
+                    read -p ">" SETTING_INPUT
+                    if [[ $SETTING_NUMBER != $SETTING_MAX ]]; then
+                        #wget -q number${MODNUMBER} -O $MODNUMBER
+                        SETTING_NUMBER=$((SETTING_NUMBER + 1))
+                        echo "$SETTING_NUMBER"
+                        SETTING_SED="\$ft_sg_sed${SETTING_NUMBER}"
+                    fi
+
+                    if [[ $SETTING_NUMBER = $SETTING_MAX ]]; then
+                        echo "これで初期設定は終わりです、お疲れ様でした。"
+                        echo "この他にもExtension等様々な物の有効化方法が有りますが、詳しくは https://akari.fiid.net/dev/amb/top をご覧ください!"
+                        echo "それでは良いDiscordBotライフを!"
+                        sleep 3
+                        break
+                    fi
+
+                    #設定sed用
+                    ft_sg_sed1=$(sed -i -e 's/setting_VersionCheck="'$setting_VersionCheck'"/setting_VersionCheck="'$SETTING_INPUT'"/' ./assets/settings.txt)
+                    ft_sg_sed2=$(sed -i -e 's/setting_botinvite="'$setting_botinvite'"/setting_botinvite="'$firstsetting2'"/' ./assets/settings.txt)
+                    ft_sg_sed3=$(sed -i -e 's/setting_outputdata="'$setting_outputdata'"/setting_outputdata="'$firstsetting3'"/' ./assets/settings.txt)
+                    ft_sg_sed4=$(sed -i -e 's/setting_backuptime="'$setting_backuptime'"/setting_backuptime="'$firstsetting4'"/' ./assets/settings.txt)
+
+                    if [[ $SETTING_NUMBER = 1 ]]; then
+                        echo "#BOTを起動した際にVercheckを走らせるかどうか (default = yes)"
+                    elif [[ $SETTING_NUMBER = 2 ]]; then
+                        echo "BOTを起動した際に招待リンクを表示するかどうか (default = yes)"
+                    fi
+                    if [[ $SETTING_NUMBER = 3 ]]; then
+                        echo "BOTを起動した際にTOKEN等の情報を更新するかどうか (default = yes)"
+                    elif [[ $SETTING_NUMBER = 4 ]]; then
+                        echo "バックアップを行うか否か (default = yes)"
+                    fi
+                    case $SETTING_INPUT in
+                    [y])
+                        eval $SETTING_SED
+                        echo "設定を変更しました。"
+                        ;;
+                    [n])
+                        echo "設定を変更しました。"
+                        ;;
+                    *)
+                        echo "(y)es or (n)o を入力してください。"
+                        ;;
+                    esac
+                done
                 break
             elif [ $INPUT_DATA = n ]; then
-                sed -i -e 's/firststart="'$firststart'"/firststart="'1'"/' ./assets/settings.txt
                 echo "キャンセルしました!"
                 echo "自動的に元の動作を行います。"
                 break
@@ -635,8 +665,8 @@ mc)
             read -p ">" serverstartlist
             case $serverstartlist in
 
-
-
+            \
+                \
                 *)
                 #不正なキー入力
                 echo "上記に出ているコマンドを入力してください。"

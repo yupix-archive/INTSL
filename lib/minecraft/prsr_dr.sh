@@ -16,7 +16,6 @@ else
         else
             read -p ">" INPUT_Y_OR_N
             INPUT_Y_OR_N=${INPUT_Y_OR_N:-y}
-            echo $INPUT_Y_OR_N
             case $INPUT_Y_OR_N in
             [yY]*)
                 while :; do

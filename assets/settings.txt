@@ -1,17 +1,17 @@
 #初回起動時要設定(絶対に弄らないでください)
 firststart="0"
 
-#BOTを起動した際にVercheckを走らせるかどうか (default = yes)
-setting_VersionCheck="yes"
+#BOTを起動した際にVercheckを走らせるかどうか (default = y)
+setting_VersionCheck="y"
 
-#BOTを起動した際に招待リンクを表示するかどうか (default = yes)
-setting_botinvite="yes"
+#BOTを起動した際に招待リンクを表示するかどうか (default = y)
+setting_botinvite=""
 
-#BOTを起動した際にTOKEN等の情報を更新するかどうか (default = yes)
-setting_outputdata="yes"
+#BOTを起動した際にTOKEN等の情報を更新するかどうか (default = y)
+setting_outputdata=""
 
-#バックアップを行うか否か (default = yes)
-setting_backuptime="yes"
+#バックアップを行うか否か (default = y)
+setting_backuptime=""
 
 #バックアップの出力先(default= ../)
 
