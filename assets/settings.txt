@@ -1,25 +1,32 @@
-#初回起動時要設定(絶対に弄らないでください)
+#初回起動時要設定
 firststart="0"
 
-#BOTを起動した際にVercheckを走らせるかどうか (default = yes)
-setting_VersionCheck="yes"
+#BOTを起動した際にVercheckを走らせるかどうか (default = y)
+setting_VersionCheck="y"
 
-#BOTを起動した際に招待リンクを表示するかどうか (default = yes)
-setting_botinvite="yes"
+#BOTを起動した際に招待リンクを表示するかどうか (default = y)
+setting_botinvite=""
 
-#BOTを起動した際にTOKEN等の情報を更新するかどうか (default = yes)
-setting_outputdata="yes"
+#BOTを起動した際にTOKEN等の情報を更新するかどうか (default = y)
+setting_outputdata=""
 
-#バックアップを行うか否か (default = yes)
-setting_backuptime="yes"
+#バックアップを行うか否か (default = y)
+setting_backuptime=""
 
 #バックアップの出力先(default= ../)
+
+#spigotのbuild時実行環境をリセットするか否か (default=y)
+setting_resetspigot="y"
 
 #誤っても変更しないでください。
 #この行を変更するとほぼ確実にきちんとした動作が行えなくなります。
 #理由としてはこれは本体の特定の行にテキストを追加する際に使用する変数のため、
 #きちんと動作する所を予め確認してから変更しないと、行の間に挿入されてしまい、おかしいことになります。
-SERVERLANE="638"
+SERVERLANE="550"
+#上と同様
+#default(2)
+EXSTENSIONLANE="2"
+EXTADDLINE="6"
 
 #最大リトライ数
 RETRYMAX="3"

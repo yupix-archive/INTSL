@@ -1,11 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 while :; do
     read -p ">" INPUT_SERVER_VERSION
     case $INPUT_SERVER_VERSION in
-    1.7.10) #対応予定有り
-        echo "対応予定有り"
-        #JAR_URL=""
-        #break
+    1.7.10)
+        JAR_URL="https://repo.akarinext.org/pub/paper/1.7/paperspigot-1.7.10-R0.1.jar"
+        break
         ;;
     1.8.8)
         JAR_URL="https://papermc.io/api/v1/paper/1.8.8/443/download"

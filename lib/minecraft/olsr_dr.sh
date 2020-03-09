@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 mc_donwload_version="$INPUT_SERVER_VERSION"
 PROGRESS_STATUS="ファイルの確認中"
 SPINNER

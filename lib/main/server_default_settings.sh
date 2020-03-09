@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 cd $FILE_SERVER_NAME
-SCREEN_NAME=`pwgen`
+SCREEN_NAME=`pwgen -0`
 
 cat <<EOF >setting.txt
 test=''unnti'_MEM_MIN=20G'
@@ -10,7 +10,7 @@ ${FILE_SERVER_NAME}_MEM_MAX=20G
 ${FILE_SERVER_NAME}_MEM_MIN=20G
 ${FILE_SERVER_NAME}_JAVA_HOME=java
 ${FILE_SERVER_NAME}_SCREEN_NAME="${SCREEN_NAME}"
-test_pid=""
+${FILE_SERVER_NAME}_pid="none"
 #ステータス
-STATUS="online"
+STATUS="offline"
 EOF

@@ -1,0 +1,12 @@
+stages:
+  - test
+  - deploy
+
+test:
+    tags:
+        - linux
+        - archlinux
+    stage: test
+    script:
+        - echo "Test"
+        - ./linux.sh

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 mc_donwload_version="$INPUT_SERVER_VERSION"
 PROGRESS_STATUS="ファイルの確認中"
 SPINNER
@@ -16,7 +16,6 @@ else
         else
             read -p ">" INPUT_Y_OR_N
             INPUT_Y_OR_N=${INPUT_Y_OR_N:-y}
-            echo $INPUT_Y_OR_N
             case $INPUT_Y_OR_N in
             [yY]*)
                 while :; do

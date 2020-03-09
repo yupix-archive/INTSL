@@ -5,6 +5,13 @@
 #誰か知り合い等を呼びサポートをしてもらいつつ変更することを推奨します。
 #このファイルが破損するとほぼ全ての動作が不安定になります。
 
+#INTSLバージョン情報
+INTVERSIONHEAD="1"
+INTVERSIONBODY="00"
+INTEDITION="linux"
+#INTURL="https://dev.akarinext.org/yupix/INTSL/-/archive/$INTVERSION-$INTEDITION/INTSL-$INTVERSION-INTEDITION.zip"
+INTREPOURL="https://repo.akarinext.org/"
+
 #コマンド関連
 VERSION="0.2.6"
 EDITION="Linux"

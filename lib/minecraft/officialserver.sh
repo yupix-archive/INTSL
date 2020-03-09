@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 while :; do
     read -p ">" INPUT_SERVER_VERSION
     case $INPUT_SERVER_VERSION in

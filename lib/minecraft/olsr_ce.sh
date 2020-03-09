@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 echo "サーバーを起動する際のコマンドを指定してください"
 read -p ">" INPUT_SERVER_NAME
 mkdir $INPUT_SERVER_NAME
@@ -9,18 +9,8 @@ sed -i ''$SERVERLANE'a ;;' ./linux.sh
 sed -i ''$SERVERLANE'a . ./minecraft/serversh/'$INPUT_SERVER_NAME.sh'' ./linux.sh
 cd ./minecraft/serversh/
 cat <<EOF >$INPUT_SERVER_NAME.sh
-#!/bin/bash
-                cd ./$INPUT_SERVER_NAME
-                while :; do
-                    #本番時はINPUT系に置き換え
-                    #$INPUT_SERVER_NAME\SERVER
-                    echo "$INPUT_SERVER_NAMESERVER"
-                    echo "start | サーバーを起動します"
-                    echo "settings | サーバー起動時の設定を変更できます"
-                    echo "mcst | Minecraftサーバー既存の設定を変更します"
-                    read -p ">" server
-                    case \$server in
-                    start)
+#!/usr/bin/env bash
+server_start(){
                         #本番時は$INPUT系に置き換え
                         #SERVER_NAME="$INPUT_SERVER_NAME" +
                         FILE_SERVER_NAME="$INPUT_SERVER_NAME"
@@ -100,6 +90,20 @@ cat <<EOF >$INPUT_SERVER_NAME.sh
                         else
                             echo "JARファイルのチェックに失敗"
                         fi
+}
+
+                cd ./$INPUT_SERVER_NAME
+                while :; do
+                    #本番時はINPUT系に置き換え
+                    #$INPUT_SERVER_NAME\SERVER
+                    echo "$INPUT_SERVER_NAMESERVER"
+                    echo "start | サーバーを起動します"
+                    echo "settings | サーバー起動時の設定を変更できます"
+                    echo "mcst | Minecraftサーバー既存の設定を変更します"
+                    read -p ">" server
+                    case \$server in
+                    start)
+                        server_start
                         ;;
                     #設定変更コマンド
                     settings)
