@@ -57,9 +57,6 @@ JMusicBotの作者様、その他の関係者様等の方々がいて
 
 ## author
 - [MainSYSTEM / yupix](https://github.com/yupix/)
-
-## AMBauthor
-- [MainSYSTEM / yupix](https://github.com/yupix/)
 - [SubSYSTEM / sousuke0422](https://github.com/sousuke0422/)
 
 ## Minecraftバージョン対応状況
@@ -151,20 +148,47 @@ Issuesは確認までに時間がかかると思われます、早めの対応�
 - [issues](https://github.com/yupix/amb/issues)
 
 ## このプロジェクトを使う際の注意点
-このProjectは必ず安定した動作を得られるとは限りません。
-理由としてはコードを追加している最中に私事yupixはできる限りの
-バグになりうる物を修正しているつもりですが、それでもいつの間にかできてしまっている、
-又は他のコードとの相性が悪く、不安定な動作を取るなどです。次に先程述べた通り、このProjectは
-バグを多く含んでおり、それは最新バージョンになれば元あったものは減り、新しいものが増えるかもしれませんが、
-よく使うようなものは早めに修正が施されるため、このProjectは常に最新のバージョンを保つことをおすすめします。
-最後にこのプロジェクトを使い何か問題、損害が発生した場合等は一切我々は保証しませんのでご注意ください。
+まず最初にこのProjectを公開環境で使用することは推奨されません。
+理由としてはアップデートにより元あった環境が破壊される可能性などがあるためです。
+次にこのProjectはyupixが作りsousukeがチェックなどを行う形での作成の為
+見逃した不具合などがある可能性が極めて高いです。その為アップデートがあった際は
+できるだけ早めにアップデートすることを推奨します。
 
 ## ２時配布に関して
-現在本Projectは多くのバグなどを抱えています。
-そのため、本Projectを2次配布等をする際、アップデート先の
-URLを変更するなどすると修正パッチが正しく適応されないなどの重大な問題が発生する可能性が極めて高いです。
+本Projectでは
 その他、改造された物などは、yupixによって追加された機能以外が存在する可能性があるため、
 今永久的なサポートを受けるには本Projectの2次配布をお控えください。ご協力お願いします
+
+## 拡張機能について
+このProjectでは拡張機能が使用可能となっています。
+現在公式で開発している拡張機能をインポートする方法は以下の通りです。
+※INTSLは既にInstallされている事を想定しています。
+<details>
+
+## 拡張機能をgitcloneする
+```
+git clone https://dev.akarinext.org/yupix/intsl-on-mindustry.git
+```
+## 中にあるmindustry.shをINTSLのlinux.shがある所までもっていく(ProjectRoot)
+
+## 導入する為に以下の行を1行ずつ実行します。
+※>は消してください
+```
+./linux.sh main
+> extension
+> import
+> mindustry
+```
+
+## 使えるか確認する
+```
+./linux.sh main
+> extension
+> use
+> mindustry
+> start
+```
+</details>
 
 ## 開発者モードの有効化
 準備中
