@@ -8,13 +8,6 @@ Minecraftのサーバー作成補助等様々な開発者やサーバー運営�
 目指しています。
 主な開発元は[ここ](https://dev.akarinext.org/yupix/INTSL)の為更新が遅い可能性があります。
 
-## このProjectをGitCloneして使用する際の注意点
-基本的に私はこのProjectをサーバー運営などに利用するために、
-GitCloneする事を推奨しません。理由としては、このProjectでは内部的に、
-特定の行に特定の文字列を追加する処理などが存在し、最新のデータを利用すると、
-編集した際に行が増えていて行を潰してしまう可能性が高いからです。
-そのため、開発者以外はreleaseに公開してある比較的安定したバージョンをご利用ください。
-
 ## このProjectに関して
 本Projectの大幅な機能などはyupixが作成しております。
 本Project内に存在するAWKの管理などをsousuke0422さんがおこなっています。
@@ -28,15 +21,17 @@ JMusicBotの作者様、その他の関係者様等の方々がいて
 
 ### 必須パッケージ等
 - pwgen  
+  ```
   Arch: sudo pacman -S pwgen  
   Ubuntu: sudo apt install pwgen  
 - screen  
+  ```
   Arch: sudo pacman -S screen  
   Uubntu: sudo apt install screen  
-
 ### OS
 - [Ubuntu](https://www.ubuntulinux.jp/)  
 - [MANJARO](https://manjaro.org/)  
+- [Windows 10](https://www.microsoft.com/ja-jp/software-download/windows10)  
 
 ### JAVA
 - [Amazon Corretto 8](https://docs.aws.amazon.com/ja_jp/corretto/latest/corretto-8-ug/downloads-list.html)
@@ -50,7 +45,36 @@ JMusicBotの作者様、その他の関係者様等の方々がいて
 
 ## 使い方
 ### Linux:
-準備中
+<details>
+<summary>詳細</summary>
+このProjectではREADMEの上のほうにある
+必須パッケージを必ず入れてください。
+
+### このProjectをGitCloneする / 実行権限の付与
+```
+  #GitHub
+  git clone git@github.com:yupix/INTSL.git
+  #GitLab
+  git clone git@dev.akarinext.org:yupix/INTSL.git
+
+  #Cloneしたファイルに移動
+  cd INTSL
+
+  #実行権限の付与
+  chmod +x linux.sh
+```
+
+### 動作をテストする
+```
+  #INTSLファイル内にいない場合は
+  cd INTSL
+
+  ./linux.sh
+```
+これでINTSLと大きく表示されれば正常です。
+お疲れさまでした。
+</details>
+
 
 ### Windows:
 準備中
@@ -140,29 +164,36 @@ JMusicBotの作者様、その他の関係者様等の方々がいて
 本Projectを作るきっかけとなった物です、この場で心より感謝申し上げます。
 [JMusicBot](https://github.com/jagrosh/MusicBot/releases)
 
-## サポート
-バグの発見または機能の追加に付きましては以下のページ等に報告していただけると助かります。
-Issuesは確認までに時間がかかると思われます、早めの対応を
-望む場合はDiscordへの参加を推奨します。
-- [Discord](https://discord.gg/uDNyePY)
-- [issues](https://github.com/yupix/amb/issues)
-
 ## このプロジェクトを使う際の注意点
-まず最初にこのProjectを公開環境で使用することは推奨されません。
-理由としてはアップデートにより元あった環境が破壊される可能性などがあるためです。
-次にこのProjectはyupixが作りsousukeがチェックなどを行う形での作成の為
-見逃した不具合などがある可能性が極めて高いです。その為アップデートがあった際は
-できるだけ早めにアップデートすることを推奨します。
+ - 概要
+ - GitCloneして使用する際の注意点
+ - 2時配布について
+<details>
+<summary>詳細</summary>
 
-## ２時配布に関して
+### 概要
+まず最初に、このProjectを本番環境での使用は現在
+推奨されません。理由としてはこのProjectは主に2人で
+開発・テストが行われているため、見逃し等で重大なバグ等を
+誤って最新バージョンでリリースしてしまう可能性があるためです。
+
+### このProjectをGitCloneして使う際の注意点
+このProjectは特定の行に文字を追加する処理等が多数存在し、
+Releasesではなく、普通にGitCloneした場合その行がずれている事があります。
+もし、ずれている物を使用すると99%の確率で動作がおかしくなる可能性があります。
+そのため、開発者以外はReleasesからのダウンロードをお勧めします。
+
+### ２時配布に関して
 本Projectでは
 その他、改造された物などは、yupixによって追加された機能以外が存在する可能性があるため、
 今永久的なサポートを受けるには本Projectの2次配布をお控えください。ご協力お願いします
+</details>
 
 ## 拡張機能について
 このProjectでは拡張機能が使用可能となっています。
 現在公式で開発している拡張機能をインポートする方法は以下の通りです。
 ※INTSLは既にInstallされている事を想定しています。
+※現在このRepositoryは空の為使用することができません。
 <details>
 
 ## 拡張機能をgitcloneする
@@ -191,7 +222,14 @@ git clone https://dev.akarinext.org/yupix/intsl-on-mindustry.git
 </details>
 
 ## 開発者モードの有効化
-準備中
+現在準備中
+
+## サポート
+バグの発見または機能の追加に付きましては以下のページ等に報告していただけると助かります。
+Issuesは確認までに時間がかかると思われます、早めの対応を
+望む場合はDiscordへの参加を推奨します。
+- [Discord](https://discord.gg/uDNyePY)
+- [issues](https://github.com/yupix/amb/issues)
 
 ## ライセンス
 - JmusicBot
