@@ -380,18 +380,20 @@ main)
     read -p ">" INPUT_DATA
     case $INPUT_DATA in
     extension)
-        echo "ほお"
+        echo "■ use | 拡張機能を使用します。"
+        echo "■ import | 拡張機能をインポートします。"
+        echo "■ list | 拡張機能の一覧を表示します。"
         read -p ">" INPUT_EXTENSION_DATA
         case $INPUT_EXTENSION_DATA in
         use)
             . ./lib/main/extension_manager.sh
-        ;;
+            ;;
         import)
             echo "インポートするshの名前を入力してください。"
             read -p ">" INPUT_EXTENSION_NAME
             if [[ -e ${INPUT_EXTENSION_NAME}.sh ]]; then
                 #拡張機能系だけを保存するよう
-                GETIEXT=$(cat ./${INPUT_EXTENSION_NAME}.sh | grep -e IEXT -e INT >>./${INPUT_EXTENSION_NAME}.txt)
+                GETIEXT=$(cat ./${INPUT_EXTENSION_NAME}.sh | grep -e IEXT -e INT -e HEAD -e BODY -e VURL >>./${INPUT_EXTENSION_NAME}.txt)
                 MAXLINE=$(cat ${INPUT_EXTENSION_NAME}.txt | wc -l)
                 echo "$MAXLINE"
                 while [[ $COUNT != $MAXLINE ]]; do
@@ -411,19 +413,23 @@ main)
                 fi
                 mv ./${INPUT_EXTENSION_NAME}.sh ./lib/extensions/
                 MAXLINE=$(cat ${INPUT_EXTENSION_NAME}.sh | wc -l)
-                    sed -i ''$EXTADDLINE'i'${INPUT_EXTENSION_NAME}\)'' ./lib/main/extension_manager.sh
-                    sed -i ''$EXTADDLINE'a ;;' ./lib/main/extension_manager.sh
-                    sed -i ''$EXTADDLINE'a . ./lib/extensions/'${INPUT_EXTENSION_NAME}.sh'' ./lib/main/extension_manager.sh
-                    #ライン追加のライン数を変更
-                    NEWEXTADDLANE="3"
-                    sed -i -e 's/EXTADDLINE="'$EXTADDLINE'"/EXTADDLINE="'$NEWEXTADDLANE'"/' ./assets/settings.txt
+                sed -i ''$EXTADDLINE'i'${INPUT_EXTENSION_NAME}\)'' ./lib/main/extension_manager.sh
+                sed -i ''$EXTADDLINE'a ;;' ./lib/main/extension_manager.sh
+                sed -i ''$EXTADDLINE'a . ./lib/extensions/'${INPUT_EXTENSION_NAME}.sh'' ./lib/main/extension_manager.sh
+                #ライン追加のライン数を変更
+                COUNTADD=$((EXTADDLINE + 3))
+                sed -i -e 's/EXTADDLINE="'$EXTADDLINE'"/EXTADDLINE="'$COUNTADD'"/' ./assets/settings.txt
                 . ./assets/extension.txt
                 NEWEXTENSIONS=$((EXTENSIONS + 1))
                 #エクステンションの数追加
                 sed -i -e 's/EXTENSIONS="'$EXTENSIONS'"/EXTENSIONS="'$NEWEXTENSIONS'"/' ./assets/extension.txt
                 . ./assets/extension.txt
-                sed -i -e "s/IEXT/IEXT$EXTENSIONS/g" ./assets/extension.txt
-                sed -i -e "s/INTEXT/INTEXT$EXTENSIONS/g" ./assets/extension.txt
+                sed -i -e "s/IEXT/IE_XT$EXTENSIONS/g" ./assets/extension.txt
+                sed -i -e "s/INTEXT/INT_EXT$EXTENSIONS/g" ./assets/extension.txt
+                sed -i -e "s/HEAD/IEHE_AD$EXTENSIONS/g" ./assets/extension.txt
+                sed -i -e "s/BODY/BO_DY$EXTENSIONS/g" ./assets/extension.txt
+                sed -i -e "s/VURL/V_URL$EXTENSIONS/g" ./assets/extension.txt
+                sed -i -e "s/EXDOWNLOAD/EX_DOWNLOAD$EXTENSIONS/g" ./assets/extension.txt
                 rm -r ${INPUT_EXTENSION_NAME}.txt
                 echo "shが存在します。"
             else
@@ -436,16 +442,72 @@ main)
             echo "========================================"
             while [[ $COUNT != $EXTENSIONS ]]; do
                 COUNT=$(($COUNT + 1))
-                EXT_NAME="IEXT"
-                eval $EXT_NAME="\$IEXT$COUNT"
-                EXT_VERSION="INTEXT"
-                eval $EXT_VERSION="\$INTEXT$COUNT"
-                echo "拡張機能名: $IEXT"
-                echo "バージョン: $INTEXT"
+                EXT_NAME="IE_XT"
+                eval $EXT_NAME="\$IE_XT$COUNT"
+                EXT_VERSION="INT_EXT"
+                eval $EXT_VERSION="\$INT_EXT$COUNT"
+                echo "拡張機能名: $IE_XT"
+                echo "バージョン: $INT_EXT"
                 echo "========================================"
             done
             ;;
+        vcheck)
+            . ./assets/extension.txt
+            #for ((i = 1; i <= $EXTENSIONS; i++)); do
+            while [[ $PLAYCOUNT != $EXTENSIONS ]]; do
+                PROGRESS_STATUS="アップデートの確認中 $3 / $EXTENSIONS"
+                SPINNER
+                COUNT=$(($COUNT + 1))
+                PLAYCOUNT=$(($PLAYCOUNT + 1))
+                EXT_NAME="V_URL"
+                eval $EXT_NAME="\$V_URL$COUNT"
+                wget -q $V_URL
+                . ./newversion.txt
+                NEWINTSLGETV=$(echo "$BO_DY" | sed -e 's/\(.\{1\}\)/.\1/g')
+                EXT_NAME="IE_XT"
+                eval $EXT_NAME="\$IE_XT$COUNT"
+                EXT_VERSION="INT_EXT"
+                eval $EXT_VERSION="\$INT_EXT$COUNT"
+                EXT_HEAD="IEHE_AD"
+                eval $EXT_HEAD="\$IEHE_AD$COUNT"
+                EXT_BODY="BO_DY"
+                eval $EXT_BODY="\$BO_DY$COUNT"
+                if [[ ${NEWEXTHEAD}${NEWEXTBODY} -gt ${IEHE_AD}${BO_DY} ]]; then
+                    #NEWVER=$(echo "$INTNEWVERSIONBODY" | sed -e 's/\(.\{1\}\)/.\1/g')
+                    echo "$IE_XT に更新があります"
+                    echo -e '\e[1;37mExtension     Current     Latest\e[m'
+                    echo "================================="
+                    echo -e "$IE_XT     $INT_EXT\e[32m         $NEWVERSION\e[m"
+                    echo "更新を行いますか?"
+                    echo "(Y)es / (N)o"
+                    read -p ">" INPUT_DATA
+                    case $INPUT_DATA in
+                    [yY])
+                        echo "ダウンロードを開始します。"
+                        echo "DOWNLOADURL: $EXDOWNLOAD"
+                        wget -q $EXDOWNLOAD
+                        #if [[ -e ${IE_XT}.sh ]]; then
+                        #    echo "a"
+                        #fi
+                        #バージョン情報を更新
+                        sed -i -e 's/INT_EXT'$COUNT'="'$INT_EXT'"/INT_EXT'$COUNT'="'$NEWVERSION'"/' ./assets/extension.txt
+                        #HEAD情報を更新する
+                        sed -i -e 's/IEHE_AD'$COUNT'="'$IEHE_AD'"/IEHE_AD'$COUNT'="'$NEWEXTHEAD'"/' ./assets/extension.txt
+                        #BODY情報を更新する
+                        sed -i -e 's/BO_DY'$COUNT'="'$BO_DY'"/BO_DY'$COUNT'="'$NEWEXTBODY'"/' ./assets/extension.txt
+                        #ダウンロード処理
+                        #バージョンのファイルを変更
+                        ;;
+                    [nN])
+                        echo "キャンセルしました。"
+                        ;;
+                    esac
+                fi
+                #rm -r ./newversion.txt
+            done
+            ;;
         settings) ;;
+        donwload) ;;
         esac
         ;;
     esac
@@ -571,7 +633,7 @@ mc)
 
 #DiscordBot系
 discord)
-    echo "w"
+    echo "Discord"
     ;;
 *)
 
@@ -583,13 +645,21 @@ discord)
     echo "##██║██║ ╚████║   ██║   ███████║███████╗  ##"
     echo "##╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚══════╝  ##"
     echo -e "\033[1;37m##========================================##\033[0;39m"
-    echo -e "\033[0;31mmain\033[1;39m: INTSLに関する事を設定できます。"
-    echo -e "   └   \033[0;31mextension\033[1;39m: 拡張機能を管理します。"
-    echo -e "\033[0;31mmc\033[1;39m: Minecraftに関する機能を開始します。"
-    echo -e "   └   \033[0;31msrce\033[1;39m: サーバーを作成します。"
-    echo -e "   └   \033[0;31msrmt\033[1;39m: サーバーを管理します。"
+    echo -e "\033[0;31mmain\033[1;39m: INTSLに関する事を設定できます"
+    echo -e "   └   \033[0;31mextension\033[1;39m: 拡張機能を管理します"
+    echo -e "       └   \033[0;31muse\033[1;39m: 拡張機能を使用します"
+    echo -e "       └   \033[0;31mlist\033[1;39m: 拡張機能の一覧を表示します"
+    echo -e "       └   \033[0;31mimport\033[1;39m: 拡張機能をインポートします"
+    echo -e "\033[0;31mmc\033[1;39m: Minecraftに関する機能を開始します"
+    echo -e "   └   \033[0;31msrce\033[1;39m: サーバーを作成します"
+    echo -e "   └   \033[0;31msrmt\033[1;39m: サーバーを管理します"
     echo -e "   └   \033[0;31motst\033[1;39m: サーバーリストを出力します"
     echo -e "   └   \033[0;31mitst\033[1;39m: サーバーリストをインポートします"
+    ;;
+esac
+case $2 in
+tete)
+    echo "今後用"
     ;;
 esac
 exit 0
