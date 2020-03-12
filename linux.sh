@@ -137,7 +137,7 @@ serverlistoutput() {
         else
             while [[ ! -e OUTPUTSERVERLIST.txt ]]; do
                 PROGRESS_STATUS="アウトプット中..."
-                cat linux.sh | awk '/STARTSERVERLIST/,/ENDSERVERLIST/' >OUTPUTSERVERLIST.txt
+                cat ./lib/main/server_list.sh | awk '/STARTSERVERLIST/,/ENDSERVERLIST/' >OUTPUTSERVERLIST.txt
                 sed -i -e '1,1d' OUTPUTSERVERLIST.txt
                 #先頭削除
                 sed -i -e '$d' OUTPUTSERVERLIST.txt
@@ -202,6 +202,17 @@ vcheck() {
                         if [[ ${INTNEWVERSIONHEAD}${INTNEWVERSIONBODY} -gt ${INTVERSIONHEAD}${INTVERSIONBODY} ]]; then
                             echo "バージョンアップに失敗"
                         else
+                            rm -r news.txt
+                            wget -q ${INTREPOURL}pub/intsl/news.txt
+                            MAXLINE=$(cat news.txt | wc -l)
+                            while [[ $COUNT != $MAXLINE ]]; do
+                                . ./assets/settings.txt
+                                PROGRESS_STATUS="最新情報の取得中 $COUNT / $MAXLINE"
+                                SPINNER
+                                COUNT=$(($COUNT + 1))
+                                GETLINE=$(sed -n ${COUNT}P news.txt)
+                                echo "$GETLINE"
+                            done
                             echo "バージョンアップに成功"
 
                         fi
@@ -434,6 +445,55 @@ extension_import() {
         echo "shが存在しません"
     fi
 }
+DEVELOPER_LOGIN() {
+    if [ -e $PASSWORDDILECTORY ]; then
+        echo "過去のログイン記録を参照中..."
+        if [[ bDkHdGs1VOFi0i6n0ukH9BXks = $password ]]; then
+            echo "認証に成功..."
+            if [ -n "$YOURNAME" ]; then
+                if [ -n "$KEISHOU" ]; then
+                    echo -e '\e[1;37;32mようこそ'$YOURNAME$KEISHOU'\e[0m'
+                else
+                    echo -e '\e[1;37;32mようこそ'$YOURNAME様'\e[0m'
+                fi
+            else
+                if [ -n "$KEISHOU" ]; then
+                    echo -e '\e[1;37;32mようこそ開発者'$KEISHOU'\e[0m'
+                else
+                    echo -e '\e[1;37;32mようこそ開発者様\e[0m'
+                fi
+            fi
+        else
+            echo "おや?どうやら開発者モードの初回起動時になにか問題があったようで、パスワードがきちんと入力できていないようです..."
+            echo "引き続き開発者モードを有効化する場合は、パスワードを入力してください..."
+            while :; do
+                if [[ $RETRYCOUNT = $RETRYMAX ]]; then
+                    echo "RETRY上限に"
+                    exit
+                else
+                    read -p ">" -s devpassword
+                    if [ $devpassword = bDkHdGs1VOFi0i6n0ukH9BXks ]; then
+                        echo "password="bDkHdGs1VOFi0i6n0ukH9BXks"" >./assets/password.txt
+                        echo "パスワード認証に成功しました!"
+                        break
+                    else
+                        echo "パスワードが間違っています。"
+                        RETRYCOUNT=$((RETRYCOUNT + 1))
+                    fi
+                fi
+            done
+        fi
+    else
+        echo "開発者モードを初めて使用するため、必要なファイルを作成します"
+        touch ./assets/password.txt
+        echo "開発者モードを有効化するためにはパスワードを入力する必要が有ります"
+        echo "パスワードを入力してください..."
+        read devpassword
+        if [ $devpassword = aXeHBw1dh8QLPhVuw40N ]; then
+            echo "password="aXeHBw1dh8QLPhVuw40N"" >./assets/password.txt
+        fi
+    fi
+}
 #------------------------------------------------------------------------------#
 case $1 in
 #INTSL本体
@@ -442,6 +502,55 @@ main)
     echo "■ extension | 拡張機能を管理できます"
     read -p ">" INPUT_DATA
     case $INPUT_DATA in
+    #開発者向け機能
+    dev)
+        firststart
+        DEVELOPER_LOGIN
+        if [ -n "$YOURNAME" ]; then
+            if [ -n "$KEISHOU" ]; then
+                echo -e '\e[1;37;32mようこそ'$YOURNAME$KEISHOU'\e[0m'
+            else
+                echo -e '\e[1;37;32mようこそ'$YOURNAME様'\e[0m'
+            fi
+        else
+            if [ -n "$KEISHOU" ]; then
+                echo -e '\e[1;37;32mようこそ開発者'$KEISHOU'\e[0m'
+            else
+                echo -e '\e[1;37;32mようこそ開発者様\e[0m'
+            fi
+        fi
+        echo "ここでは試験段階の機能を試すことができます"
+        echo "何をしますか?"
+        echo "■ 1.自分の名前を決める　　    ■ 4.開発者ログイン時のパスワードを変更する"
+        echo "■ 2.呼ぶさいの敬称を決める    ■ 5."
+        echo "■ 3.新型起動方法を実行する    ■ 6."
+        read -p ">" dev
+        case "$dev" in
+        [1])
+            echo "呼んでほしい名前を書いてください"
+            echo "入力待ち..."
+            read -p ">" INPUT_YOURNAME
+            sed -i -e 's/YOURNAME="'$YOURNAME'"/YOURNAME="'$INPUT_YOURNAME'"/' ./assets/userdata/allsettings.txt
+            echo "名前を覚えましたよ! $INPUT_YOURNAMEさん!"
+            ;;
+        [2])
+            echo "1. カスタム"
+            echo "読んでほしい敬称を入力してください。"
+            read -p ">" dev2
+            case "$dev2" in
+            [1])
+                read -p ">" ORIGINAL_KEISHOU
+                sed -i -e 's/KEISHOU="'$KEISHOU'"/KEISHOU="'$ORIGINAL_KEISHOU'"/' ./assets/userdata/allsettings.txt
+                ;;
+            esac
+            ;;
+        [4])
+            echo "開発者ログインをする際のパスワードを変更します。"
+            echo "パスワードは"
+            ;;
+        esac
+        ;;
+    #拡張機能系
     extension)
         echo "■ use | 拡張機能を使用します。"
         echo "■ import | 拡張機能をインポートします。"
@@ -649,21 +758,7 @@ mc)
             serverlistoutput
             ;;
         srmt)
-            echo "管理するサーバーのコマンドを入力してください"
-            read -p ">" serverstartlist
-            case $serverstartlist in
-            #STARTSERVERLIST
-
-
-
-
-
-            #ENDSERVERLIST
-            *)
-                #不正なキー入力
-                echo "上記に出ているコマンドを入力してください。"
-                ;;
-            esac
+            . ./lib/main/server_list.sh
             ;;
         esac
     done

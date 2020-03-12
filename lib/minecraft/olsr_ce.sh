@@ -4,9 +4,9 @@ read -p ">" INPUT_SERVER_NAME
 mkdir $INPUT_SERVER_NAME
 cp $SERVER_JARLIST_PATH\server$mc_donwload_version.jar ./$INPUT_SERVER_NAME
 chmod 755 ./$INPUT_SERVER_NAME/server$mc_donwload_version.jar
-sed -i ''$SERVERLANE'i'$INPUT_SERVER_NAME\)'' ./linux.sh
-sed -i ''$SERVERLANE'a ;;' ./linux.sh
-sed -i ''$SERVERLANE'a . ./minecraft/serversh/'$INPUT_SERVER_NAME.sh'' ./linux.sh
+sed -i ''$SERVERLANE'i'$INPUT_SERVER_NAME\)'' ./lib/main/server_list.sh
+sed -i ''$SERVERLANE'a ;;' ./lib/main/server_list.sh
+sed -i ''$SERVERLANE'a . ./minecraft/serversh/'$INPUT_SERVER_NAME.sh'' ./lib/main/server_list.sh
 cd ./minecraft/serversh/
 cat <<EOF >$INPUT_SERVER_NAME.sh
 #!/usr/bin/env bash
