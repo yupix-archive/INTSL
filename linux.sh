@@ -371,6 +371,69 @@ CHANGE_SERVER_MAX_MEMORY() {
 SERVER_CREATE() {
     . ./lib/minecraft/prsr_ce.sh
 }
+extension_import() {
+    rm -r ${INPUT_EXTENSION_NAME}.txt
+    if [[ -e ${INPUT_EXTENSION_NAME}.sh ]]; then
+        #拡張機能系だけを保存するよう
+        GETIEXT=$(cat ./${INPUT_EXTENSION_NAME}.sh | grep -e IEXT -e INT -e HEAD -e BODY -e VURL >>./${INPUT_EXTENSION_NAME}.txt)
+        MAXLINE=$(cat ${INPUT_EXTENSION_NAME}.txt | wc -l)
+        echo "$MAXLINE"
+        while [[ $COUNT != $MAXLINE ]]; do
+            . ./assets/settings.txt
+            COUNT=$(($COUNT + 1))
+            PROGRESS_STATUS="進捗 $COUNT / $MAXLINE"
+            SPINNER
+            GETLINE=$(sed -n ${COUNT}P ${INPUT_EXTENSION_NAME}.txt)
+            sed -i ''$EXSTENSIONLANE'i '"$GETLINE"'' ./assets/extension.txt
+            #新しいラインの数値作成
+            NEWSERVERLANE=$((EXSTENSIONLANE + 1))
+            #拡張機能の追加ライン
+            sed -i -e 's/EXSTENSIONLANE="'$EXSTENSIONLANE'"/EXSTENSIONLANE="'$NEWSERVERLANE'"/' ./assets/settings.txt
+        done
+        if [[ ! -e ./lib/extensions ]]; then
+            mkdir ./lib/extensions
+        fi
+        mv ./${INPUT_EXTENSION_NAME}.sh ./lib/extensions/
+        MAXLINE=$(cat ${INPUT_EXTENSION_NAME}.sh | wc -l)
+        sed -i ''$EXTADDLINE'i'\#${INPUT_EXTENSION_NAME}START'' ./lib/main/extension_manager.sh
+        COUNTADD=$((EXTADDLINE + 1))
+        sed -i -e 's/EXTADDLINE="'$EXTADDLINE'"/EXTADDLINE="'$COUNTADD'"/' ./assets/settings.txt
+        . ./assets/settings.txt
+        sed -i ''$EXTADDLINE'i'${INPUT_EXTENSION_NAME}\)'' ./lib/main/extension_manager.sh
+        sed -i ''$EXTADDLINE'a ;;' ./lib/main/extension_manager.sh
+        sed -i ''$EXTADDLINE'a . ./lib/extensions/'${INPUT_EXTENSION_NAME}.sh'' ./lib/main/extension_manager.sh
+        COUNTADD=$((EXTADDLINE + 3))
+        sed -i -e 's/EXTADDLINE="'$EXTADDLINE'"/EXTADDLINE="'$COUNTADD'"/' ./assets/settings.txt
+        . ./assets/settings.txt
+        sed -i ''$EXTADDLINE'i'\#${INPUT_EXTENSION_NAME}STOP'' ./lib/main/extension_manager.sh
+        COUNTADD=$((EXTADDLINE + 1))
+        sed -i -e 's/EXTADDLINE="'$EXTADDLINE'"/EXTADDLINE="'$COUNTADD'"/' ./assets/settings.txt
+        #ライン追加のライン数を変更
+        . ./assets/extension.txt
+        NEWEXTENSIONS=$((EXTENSIONS + 1))
+        #エクステンションの数追加
+        sed -i -e 's/EXTENSIONS="'$EXTENSIONS'"/EXTENSIONS="'$NEWEXTENSIONS'"/' ./assets/extension.txt
+        . ./assets/extension.txt
+        sed -i -e "s/IEXT/IE_XT$EXTENSIONS/g" ./assets/extension.txt
+        sed -i -e "s/INTEXT/INT_EXT$EXTENSIONS/g" ./assets/extension.txt
+        sed -i -e "s/HEAD/IEHE_AD$EXTENSIONS/g" ./assets/extension.txt
+        sed -i -e "s/BODY/BO_DY$EXTENSIONS/g" ./assets/extension.txt
+        sed -i -e "s/VURL/V_URL$EXTENSIONS/g" ./assets/extension.txt
+        sed -i -e "s/EXDOWNLOAD/EX_DOWNLOAD$EXTENSIONS/g" ./assets/extension.txt
+        . ./assets/settings.txt
+        EXT_MD5=$(echo "$INPUT_EXTENSION_NAME" | md5sum | sed -e "s/-//g")
+        sed -i ''$EXSTENSIONLANE'i '"EXTMD5=\"$EXT_MD5\""'' ./assets/extension.txt
+        sed -i -e "s/EXTMD5/EXT_MD5$EXTENSIONS/g" ./assets/extension.txt
+        #新しいラインの数値作成
+        NEWSERVERLANE=$((EXSTENSIONLANE + 1))
+        #拡張機能の追加ライン
+        sed -i -e 's/EXSTENSIONLANE="'$EXSTENSIONLANE'"/EXSTENSIONLANE="'$NEWSERVERLANE'"/' ./assets/settings.txt
+        rm -r ${INPUT_EXTENSION_NAME}.txt
+        echo "shが存在します。"
+    else
+        echo "shが存在しません"
+    fi
+}
 #------------------------------------------------------------------------------#
 case $1 in
 #INTSL本体
@@ -391,50 +454,21 @@ main)
         import)
             echo "インポートするshの名前を入力してください。"
             read -p ">" INPUT_EXTENSION_NAME
-            if [[ -e ${INPUT_EXTENSION_NAME}.sh ]]; then
-                #拡張機能系だけを保存するよう
-                GETIEXT=$(cat ./${INPUT_EXTENSION_NAME}.sh | grep -e IEXT -e INT -e HEAD -e BODY -e VURL >>./${INPUT_EXTENSION_NAME}.txt)
-                MAXLINE=$(cat ${INPUT_EXTENSION_NAME}.txt | wc -l)
-                echo "$MAXLINE"
-                while [[ $COUNT != $MAXLINE ]]; do
-                    . ./assets/settings.txt
-                    PROGRESS_STATUS="進捗 $COUNT / $MAXLINE"
-                    SPINNER
-                    COUNT=$(($COUNT + 1))
-                    GETLINE=$(sed -n ${COUNT}P ${INPUT_EXTENSION_NAME}.txt)
-                    sed -i ''$EXSTENSIONLANE'i '"$GETLINE"'' ./assets/extension.txt
-                    #新しいラインの数値作成
-                    NEWSERVERLANE=$((EXSTENSIONLANE + 1))
-                    #拡張機能の追加ライン
-                    sed -i -e 's/EXSTENSIONLANE="'$EXSTENSIONLANE'"/EXSTENSIONLANE="'$NEWSERVERLANE'"/' ./assets/settings.txt
-                done
-                if [[ ! -e ./lib/extensions ]]; then
-                    mkdir ./lib/extensions
+            . ./assets/extension.txt
+            while [[ $PLAYCOUNT != $EXTENSIONS ]]; do
+                PLAYCOUNT=$(($PLAYCOUNT + 1))
+                if [[ $EXTENSIONS = 0 ]]; then
+                    break
                 fi
-                mv ./${INPUT_EXTENSION_NAME}.sh ./lib/extensions/
-                MAXLINE=$(cat ${INPUT_EXTENSION_NAME}.sh | wc -l)
-                sed -i ''$EXTADDLINE'i'${INPUT_EXTENSION_NAME}\)'' ./lib/main/extension_manager.sh
-                sed -i ''$EXTADDLINE'a ;;' ./lib/main/extension_manager.sh
-                sed -i ''$EXTADDLINE'a . ./lib/extensions/'${INPUT_EXTENSION_NAME}.sh'' ./lib/main/extension_manager.sh
-                #ライン追加のライン数を変更
-                COUNTADD=$((EXTADDLINE + 3))
-                sed -i -e 's/EXTADDLINE="'$EXTADDLINE'"/EXTADDLINE="'$COUNTADD'"/' ./assets/settings.txt
-                . ./assets/extension.txt
-                NEWEXTENSIONS=$((EXTENSIONS + 1))
-                #エクステンションの数追加
-                sed -i -e 's/EXTENSIONS="'$EXTENSIONS'"/EXTENSIONS="'$NEWEXTENSIONS'"/' ./assets/extension.txt
-                . ./assets/extension.txt
-                sed -i -e "s/IEXT/IE_XT$EXTENSIONS/g" ./assets/extension.txt
-                sed -i -e "s/INTEXT/INT_EXT$EXTENSIONS/g" ./assets/extension.txt
-                sed -i -e "s/HEAD/IEHE_AD$EXTENSIONS/g" ./assets/extension.txt
-                sed -i -e "s/BODY/BO_DY$EXTENSIONS/g" ./assets/extension.txt
-                sed -i -e "s/VURL/V_URL$EXTENSIONS/g" ./assets/extension.txt
-                sed -i -e "s/EXDOWNLOAD/EX_DOWNLOAD$EXTENSIONS/g" ./assets/extension.txt
-                rm -r ${INPUT_EXTENSION_NAME}.txt
-                echo "shが存在します。"
-            else
-                echo "shが存在しません"
-            fi
+                GET_MD5=$(echo "$INPUT_EXTENSION_NAME" | md5sum | sed -e "s/-//g")
+                SPGET_MD5="EXT_MD5"
+                eval $SPGET_MD5="\$EXT_MD5$PLAYCOUNT"
+                if [[ $EXT_MD5 = $GET_MD5 ]]; then
+                    echo "既にインストールされている為、サービスを終了します。"
+                    exit
+                fi
+            done
+            extension_import
             ;;
         list)
             . ./assets/extension.txt
@@ -455,6 +489,7 @@ main)
             . ./assets/extension.txt
             #for ((i = 1; i <= $EXTENSIONS; i++)); do
             while [[ $PLAYCOUNT != $EXTENSIONS ]]; do
+                . ./assets/extension.txt
                 PROGRESS_STATUS="アップデートの確認中 $3 / $EXTENSIONS"
                 SPINNER
                 COUNT=$(($COUNT + 1))
@@ -486,9 +521,8 @@ main)
                         echo "ダウンロードを開始します。"
                         echo "DOWNLOADURL: $EXDOWNLOAD"
                         wget -q $EXDOWNLOAD
-                        #if [[ -e ${IE_XT}.sh ]]; then
-                        #    echo "a"
-                        #fi
+                        INPUT_EXTENSION_NAME="$IE_XT"
+                        extension_import
                         #バージョン情報を更新
                         sed -i -e 's/INT_EXT'$COUNT'="'$INT_EXT'"/INT_EXT'$COUNT'="'$NEWVERSION'"/' ./assets/extension.txt
                         #HEAD情報を更新する
@@ -549,7 +583,7 @@ mc)
             [2])
                 SERVER_EDITION="paper"
                 echo "PaperServer"
-                echo -e "VersionList: | \033[1;37m1.8.8\033[0;39m | \033[1;37m1.9.4\033[0;39m | \033[1;37m1.10.2\033[0;39m | \033[1;37m1.11.2\033[0;39m | \033[1;37m1.12.2\033[0;39m | \033[1;37m1.13.2\033[0;39m | \033[1;37m1.14.4\033[0;39m | \033[1;37m1.15.2\033[0;39m |"
+                echo -e "VersionList: | \033[1;37m1.7.10\033[0;39m | \033[1;37m1.8.8\033[0;39m | \033[1;37m1.9.4\033[0;39m | \033[1;37m1.10.2\033[0;39m | \033[1;37m1.11.2\033[0;39m | \033[1;37m1.12.2\033[0;39m | \033[1;37m1.13.2\033[0;39m | \033[1;37m1.14.4\033[0;39m | \033[1;37m1.15.2\033[0;39m |"
                 . ./lib/minecraft/paperserver.sh
                 . ./lib/minecraft/prsr_dr.sh
                 ;;
@@ -619,6 +653,10 @@ mc)
             read -p ">" serverstartlist
             case $serverstartlist in
             #STARTSERVERLIST
+
+
+
+
 
             #ENDSERVERLIST
             *)

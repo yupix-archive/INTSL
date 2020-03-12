@@ -4,8 +4,10 @@ stages:
 
 test:
     tags:
-        - linux
-        - archlinux
+        #- linux
+        #- archlinux
+        - cluster
+        - kubernetes
     stage: test
     script:
         - echo "Test"
