@@ -8,6 +8,9 @@ Minecraftのサーバー作成補助等様々な開発者やサーバー運営�
 目指しています。
 主な開発元は[ここ](https://dev.akarinext.org/yupix/INTSL)の為更新が遅い可能性があります。
 
+## 公式WIKI
+公式のドキュメントは[ここ](https://github.com/yupix/INTSL/wiki)で閲覧が可能です。
+
 ## このProjectに関して
 本Projectの大幅な機能などはyupixが作成しております。
 本Project内に存在するAWKの管理などをsousuke0422さんがおこなっています。
