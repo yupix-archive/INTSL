@@ -45,7 +45,7 @@ SERVER_SPIGOTLIST_PATH="./minecraft/versionlist/spigot/"
 #ほぼ確実に全ての機能が正常に動作しなくなります。
 #本Projectの内容を変更する際は以下の本Projectの作者であるyupixが
 #解説しているサイトを読みながらすることを推奨します。
-# https://akarinext.org/wordpress/
+# https://akarinext.org/wordpress/ 現在ご覧になれない可能性があります。
 #------------------------------------------------------------------------------#
 
 #コマンド
@@ -236,18 +236,6 @@ vcheck() {
             fi
         fi
     done
-}
-
-FILEDOWNLOADFAILEDMESSEAGE() {
-    echo "エラーコード: Ais1yoocu"
-    echo "jarファイルのダウンロードに失敗しました。"
-    echo "ネットワークに接続されているか等を確認してから再度実行してみてください。"
-    echo "一向に動作が改善されない場合は開発者に連絡をお願い致します。"
-    break
-    exit 1
-}
-JARDOWNLOADSUCCESS() {
-    echo "jarファイルのダウンロードに成功しました"
 }
 
 DONWLOAD_CANCELLATION() {
@@ -446,51 +434,62 @@ extension_import() {
     fi
 }
 DEVELOPER_LOGIN() {
-    if [ -e $PASSWORDDILECTORY ]; then
-        echo "過去のログイン記録を参照中..."
-        if [[ bDkHdGs1VOFi0i6n0ukH9BXks = $password ]]; then
-            echo "認証に成功..."
-            if [ -n "$YOURNAME" ]; then
-                if [ -n "$KEISHOU" ]; then
-                    echo -e '\e[1;37;32mようこそ'$YOURNAME$KEISHOU'\e[0m'
-                else
-                    echo -e '\e[1;37;32mようこそ'$YOURNAME様'\e[0m'
-                fi
-            else
-                if [ -n "$KEISHOU" ]; then
-                    echo -e '\e[1;37;32mようこそ開発者'$KEISHOU'\e[0m'
-                else
-                    echo -e '\e[1;37;32mようこそ開発者様\e[0m'
-                fi
-            fi
-        else
-            echo "おや?どうやら開発者モードの初回起動時になにか問題があったようで、パスワードがきちんと入力できていないようです..."
-            echo "引き続き開発者モードを有効化する場合は、パスワードを入力してください..."
-            while :; do
-                if [[ $RETRYCOUNT = $RETRYMAX ]]; then
-                    echo "RETRY上限に"
-                    exit
-                else
-                    read -p ">" -s devpassword
-                    if [ $devpassword = bDkHdGs1VOFi0i6n0ukH9BXks ]; then
-                        echo "password="bDkHdGs1VOFi0i6n0ukH9BXks"" >./assets/password.txt
-                        echo "パスワード認証に成功しました!"
+    while [[ $RETRYCOUNT != $RETRYMAX ]]; do
+        if [ -e $PASSWORDDILECTORY ]; then
+            PROGRESS_STATUS="過去のログイン記録を参照中..."
+            SPINNER
+            . ./assets/settings.txt
+            if [[ $first_dev_login = 0 ]]; then
+                echo "初めてログインするようですね!"
+                echo "パスワードを入力してください。"
+                read -p ">" DEV_LOGIN_DATA -s
+                while [[ $RETRYCOUNT != $RETRYMAX ]]; do
+                    if [[ $DEV_LOGIN_DATA = $password ]]; then
+                        echo "認証に成功..."
+                        sed -i -e 's/first_dev_login="'$first_dev_login'"/first_dev_login="1"/' ./assets/settings.txt
                         break
                     else
                         echo "パスワードが間違っています。"
+                        echo "パスワードが分からない場合は assets/password.txt をご覧になってください。"
                         RETRYCOUNT=$((RETRYCOUNT + 1))
                     fi
-                fi
+                done
+                else
+                echo "認証に成功"
+                break
+            fi
+        else
+            echo "開発者モードを初めて使用するため、必要なファイルを作成します"
+            while [[ ! -e ./assets/password.txt ]]; do
+                PROGRESS_STATUS="パスワードの生成 / ファイルの作成中"
+                SPINNER
+                password_generator=$(pwgen 20)
+                cat <<EOF >./assets/password.txt
+password="$password_generator"
+EOF
             done
+            . ./assets/password.txt
+            echo "パスワードの生成にしました。パスワードは以下の通りです。"
+            echo "パスワード: $password"
+            echo "パスワードは変更可能の為、ご自分で変更する事が可能です。"
+        fi
+    done
+    if [[ $RETRYCOUNT = $RETRYMAX ]];then
+    echo "リトライ上限に達しました。"
+    fi
+}
+WELCOME_DEV_MESSAGE() {
+    if [ -n "$YOURNAME" ]; then
+        if [ -n "$KEISHOU" ]; then
+            echo -e '\e[1;37;32mようこそ'$YOURNAME$KEISHOU'\e[0m'
+        else
+            echo -e '\e[1;37;32mようこそ'$YOURNAME様'\e[0m'
         fi
     else
-        echo "開発者モードを初めて使用するため、必要なファイルを作成します"
-        touch ./assets/password.txt
-        echo "開発者モードを有効化するためにはパスワードを入力する必要が有ります"
-        echo "パスワードを入力してください..."
-        read devpassword
-        if [ $devpassword = aXeHBw1dh8QLPhVuw40N ]; then
-            echo "password="aXeHBw1dh8QLPhVuw40N"" >./assets/password.txt
+        if [ -n "$KEISHOU" ]; then
+            echo -e '\e[1;37;32mようこそ開発者'$KEISHOU'\e[0m'
+        else
+            echo -e '\e[1;37;32mようこそ開発者様\e[0m'
         fi
     fi
 }
@@ -500,25 +499,14 @@ case $1 in
 main)
     echo "MAIN SYSTEM"
     echo "■ extension | 拡張機能を管理できます"
+    echo "■ dev       | 開発者向け機能を使用できます"
     read -p ">" INPUT_DATA
     case $INPUT_DATA in
     #開発者向け機能
     dev)
         firststart
         DEVELOPER_LOGIN
-        if [ -n "$YOURNAME" ]; then
-            if [ -n "$KEISHOU" ]; then
-                echo -e '\e[1;37;32mようこそ'$YOURNAME$KEISHOU'\e[0m'
-            else
-                echo -e '\e[1;37;32mようこそ'$YOURNAME様'\e[0m'
-            fi
-        else
-            if [ -n "$KEISHOU" ]; then
-                echo -e '\e[1;37;32mようこそ開発者'$KEISHOU'\e[0m'
-            else
-                echo -e '\e[1;37;32mようこそ開発者様\e[0m'
-            fi
-        fi
+        WELCOME_DEV_MESSAGE
         echo "ここでは試験段階の機能を試すことができます"
         echo "何をしますか?"
         echo "■ 1.自分の名前を決める　　    ■ 4.開発者ログイン時のパスワードを変更する"
@@ -546,7 +534,11 @@ main)
             ;;
         [4])
             echo "開発者ログインをする際のパスワードを変更します。"
-            echo "パスワードは"
+            echo "現在のパスワードを入力してください。"
+            read -p ">" CURRENT_DEV_PASSWORD
+            case $CURRENT_DEV_PASSWORD in
+            $PASSWORD) ;;
+            esac
             ;;
         esac
         ;;

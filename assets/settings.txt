@@ -1,6 +1,9 @@
 #初回起動時要設定
 firststart="1"
 
+#開発者機能の初ログイン時用
+first_dev_login="0"
+
 #BOTを起動した際にVercheckを走らせるかどうか (default = y)
 setting_VersionCheck="y"
 
