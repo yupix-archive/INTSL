@@ -12,10 +12,10 @@ INTEDITION="linux"
 #INTURL="https://dev.akarinext.org/yupix/INTSL/-/archive/$INTVERSION-$INTEDITION/INTSL-$INTVERSION-INTEDITION.zip"
 INTREPOURL="https://repo.akarinext.org/"
 
-#コマンド関連
-VERSION="0.2.6"
+#JMUSICBOT関係
+JMUSIC_VERSION="027"
 EDITION="Linux"
-ProcessName="JMusicBot-$VERSION-$EDITION.jar"
+ProcessName="JMusicBot-$JMUSIC_VERSION-$EDITION.jar"
 
 #SYSTEM関連
 SCREEN_NAME=test
@@ -27,11 +27,11 @@ chars="/-\|"
 RETRYMAX="3"
 
 #ファイル関連
-FILE="./discord/music/"
-JAR="./discord/music/JMusicBot-$VERSION-$EDITION.jar"
+FILE="./discord/jmusic/"
+JAR="./discord/jmusic/JMusicBot-$JMUSIC_VERSION-$EDITION.jar"
 PASSWORDDILECTORY="./assets/password.txt"
 AMBSETTINGS="./assets/settings.txt"
-SYSTEMFILEMUSIC="./discord/music"
+SYSTEMFILEMUSIC="./discord/jmusic"
 SYSTEMFILE="discord"
 SYSTEMFILE="discord"
 SYSTEMMV="./discrod/musicbot/"

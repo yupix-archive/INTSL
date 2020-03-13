@@ -454,7 +454,7 @@ DEVELOPER_LOGIN() {
                         RETRYCOUNT=$((RETRYCOUNT + 1))
                     fi
                 done
-                else
+            else
                 echo "認証に成功"
                 break
             fi
@@ -474,8 +474,8 @@ EOF
             echo "パスワードは変更可能の為、ご自分で変更する事が可能です。"
         fi
     done
-    if [[ $RETRYCOUNT = $RETRYMAX ]];then
-    echo "リトライ上限に達しました。"
+    if [[ $RETRYCOUNT = $RETRYMAX ]]; then
+        echo "リトライ上限に達しました。"
     fi
 }
 WELCOME_DEV_MESSAGE() {
@@ -758,7 +758,22 @@ mc)
 
 #DiscordBot系
 discord)
-    echo "Discord"
+    firststart
+    while :; do
+        echo "Discord"
+        echo "■ eew   | eewBotに関するコマンドを使用できます"
+        echo "■ jmusic | JmusicBotに関するコマンドを使用できます"
+        echo "■ status  | 各種Botのステータスを確認します。"
+        read -p ">" INPUT_DATA
+        case "$INPUT_DATA" in
+        eew)
+            echo "■ start   | eewBotをスタートします"
+            ;;
+        jmusic)
+            . ./lib/main/jmusic.sh
+            ;;
+        esac
+    done
     ;;
 *)
 
@@ -780,6 +795,10 @@ discord)
     echo -e "   └   \033[0;31msrmt\033[1;39m: サーバーを管理します"
     echo -e "   └   \033[0;31motst\033[1;39m: サーバーリストを出力します"
     echo -e "   └   \033[0;31mitst\033[1;39m: サーバーリストをインポートします"
+    echo -e "\033[0;31mdiscord\033[1;39m: Discordに関する機能を開始します"
+    echo -e "   └   \033[0;31meew\033[1;39m: eewBotをスタートします"
+    echo -e "   └   \033[0;31mjmusic\033[1;39m: JmusiBotをスタートします"
+
     ;;
 esac
 case $2 in
