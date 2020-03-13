@@ -166,14 +166,11 @@ vcheck() {
             PROGRESS_STATUS="新しいバージョンが無いかサーバーに問い合わせています。"
             wget -q ${INTREPOURL}pub/intsl/new-version.txt -P ./assets/
             if [[ -e ./assets/new-version.txt ]]; then
-                #                INTSLGETV
-                #                NEWINTSLGETV
-                #${INTVERSIONHEAD}$VERSIONGET
                 . ./assets/new-version.txt
-                NEWINTSLGETV=$(echo "$INTNEWVERSIONBODY" | sed -e 's/\(.\{1\}\)/.\1/g')
-                if [[ ${INTNEWVERSIONHEAD}${INTNEWVERSIONBODY} -gt ${INTVERSIONHEAD}${INTVERSIONBODY} ]]; then
+                NEWINTSLGETV=$(echo "$NEWVERSION" | sed -e 's/\(.\)/\1./'g | sed -e 's/.$//')
+                if [[ $NEWVERSION -gt ${INTVERSION} ]]; then
                     echo "新しいバージョンが存在します            "
-                    echo -e "\e[31mCurrent: INTSL-${INTVERSIONHEAD}${INTVERSIONBODY}\e[m ⇛  \e[32mNew: INTSL-${INTNEWVERSIONHEAD}${INTNEWVERSIONBODY}\e[m"
+                    echo -e "\e[31mCurrent: INTSL-$INTVERSION\e[m ⇛  \e[32mNew: INTSL-$NEWINTSLGETV\e[m"
                     echo "ファイルをダウンロードしますか?"
                     echo "使用可能 (Y)es (N)o default(Y)es"
                     read -p ">" INPUT_DATA
@@ -181,16 +178,16 @@ vcheck() {
                     case $INPUT_DATA in
                     [yY])
                         echo "アップデートを開始します。"
-                        while [[ ! -e ./INTSL-${INTNEWVERSIONHEAD}${NEWINTSLGETV}-${INTEDITION}.zip ]]; do
+                        while [[ ! -e ./INTSL-${NEWINTSLGETV}-${INTEDITION}.zip ]]; do
                             PROGRESS_STATUS="データのダウンロード中"
                             SPINNER
-                            wget -q https://repo.akarinext.org/pub/intsl/${INTNEWVERSIONHEAD}${NEWINTSLGETV}/INTSL-${INTNEWVERSIONHEAD}${NEWINTSLGETV}-${INTEDITION}.zip
+                            wget -q https://repo.akarinext.org/pub/intsl/${NEWINTSLGETV}/INTSL-${NEWINTSLGETV}-${INTEDITION}.zip
                         done
                         echo "ダウンロードに成功"
                         serverlistoutput
-                        unzip -qonu ./INTSL-${INTNEWVERSIONHEAD}${NEWINTSLGETV}-${INTEDITION}.zip
-                        if [[ -e INTSL-${INTNEWVERSIONHEAD}${NEWINTSLGETV}-${INTEDITION} ]]; then
-                            cd ./INTSL-${INTNEWVERSIONHEAD}${NEWINTSLGETV}-${INTEDITION}
+                        unzip -qonu ./INTSL-${NEWINTSLGETV}-${INTEDITION}.zip
+                        if [[ -e INTSL-${NEWINTSLGETV}-${INTEDITION} ]]; then
+                            cd ./INTSL-${NEWINTSLGETV}-${INTEDITION}
                             sudo cp -r . ../
                             cd -
                         else
@@ -199,7 +196,7 @@ vcheck() {
                             break
                         fi
                         . ./assets/variable.txt
-                        if [[ ${INTNEWVERSIONHEAD}${INTNEWVERSIONBODY} -gt ${INTVERSIONHEAD}${INTVERSIONBODY} ]]; then
+                        if [[ ${NEWINTSLGETV} -gt ${INTVERSION} ]]; then
                             echo "バージョンアップに失敗"
                         else
                             rm -r news.txt
@@ -374,7 +371,7 @@ extension_import() {
     rm -r ${INPUT_EXTENSION_NAME}.txt
     if [[ -e ${INPUT_EXTENSION_NAME}.sh ]]; then
         #拡張機能系だけを保存するよう
-        GETIEXT=$(cat ./${INPUT_EXTENSION_NAME}.sh | grep -e IEXT -e INT -e HEAD -e BODY -e VURL >>./${INPUT_EXTENSION_NAME}.txt)
+        GETIEXT=$(cat ./${INPUT_EXTENSION_NAME}.sh | grep -e IEXT -e INT -e VURL >>./${INPUT_EXTENSION_NAME}.txt)
         MAXLINE=$(cat ${INPUT_EXTENSION_NAME}.txt | wc -l)
         echo "$MAXLINE"
         while [[ $COUNT != $MAXLINE ]]; do
@@ -415,8 +412,6 @@ extension_import() {
         . ./assets/extension.txt
         sed -i -e "s/IEXT/IE_XT$EXTENSIONS/g" ./assets/extension.txt
         sed -i -e "s/INTEXT/INT_EXT$EXTENSIONS/g" ./assets/extension.txt
-        sed -i -e "s/HEAD/IEHE_AD$EXTENSIONS/g" ./assets/extension.txt
-        sed -i -e "s/BODY/BO_DY$EXTENSIONS/g" ./assets/extension.txt
         sed -i -e "s/VURL/V_URL$EXTENSIONS/g" ./assets/extension.txt
         sed -i -e "s/EXDOWNLOAD/EX_DOWNLOAD$EXTENSIONS/g" ./assets/extension.txt
         . ./assets/settings.txt
@@ -581,14 +576,15 @@ main)
                 eval $EXT_NAME="\$IE_XT$COUNT"
                 EXT_VERSION="INT_EXT"
                 eval $EXT_VERSION="\$INT_EXT$COUNT"
+                Formal_V=$(echo "$INT_EXT" | sed -e 's/\(.\)/\1./'g | sed -e 's/.$//')
                 echo "拡張機能名: $IE_XT"
-                echo "バージョン: $INT_EXT"
+                echo "バージョン: $Formal_V"
                 echo "========================================"
             done
             ;;
         vcheck)
             . ./assets/extension.txt
-            #for ((i = 1; i <= $EXTENSIONS; i++)); do
+            rm -r ./newversion.txt
             while [[ $PLAYCOUNT != $EXTENSIONS ]]; do
                 . ./assets/extension.txt
                 PROGRESS_STATUS="アップデートの確認中 $3 / $EXTENSIONS"
@@ -604,45 +600,47 @@ main)
                 eval $EXT_NAME="\$IE_XT$COUNT"
                 EXT_VERSION="INT_EXT"
                 eval $EXT_VERSION="\$INT_EXT$COUNT"
-                EXT_HEAD="IEHE_AD"
-                eval $EXT_HEAD="\$IEHE_AD$COUNT"
-                EXT_BODY="BO_DY"
-                eval $EXT_BODY="\$BO_DY$COUNT"
-                if [[ ${NEWEXTHEAD}${NEWEXTBODY} -gt ${IEHE_AD}${BO_DY} ]]; then
-                    #NEWVER=$(echo "$INTNEWVERSIONBODY" | sed -e 's/\(.\{1\}\)/.\1/g')
+                #点付ける
+                Formal_V=$(echo "$INT_EXT" | sed -e 's/\(.\)/\1./'g | sed -e 's/.$//')
+                Formal_NEW_V=$(echo "$NEWVERSION" | sed -e 's/\(.\)/\1./'g | sed -e 's/.$//')
+                if [[ $NEWVERSION -gt $INT_EXT ]]; then
                     echo "$IE_XT に更新があります"
                     echo -e '\e[1;37mExtension     Current     Latest\e[m'
                     echo "================================="
-                    echo -e "$IE_XT     $INT_EXT\e[32m         $NEWVERSION\e[m"
+                    echo -e "$IE_XT     $Formal_V\e[32m         $Formal_NEW_V\e[m"
                     echo "更新を行いますか?"
                     echo "(Y)es / (N)o"
                     read -p ">" INPUT_DATA
                     case $INPUT_DATA in
                     [yY])
+                        EXT_NAME="IE_XT"
+                        eval $EXT_NAME="\$IE_XT$COUNT"
+                        while [[ ! -e ./lib/extensions/old/old_${IE_XT}.sh ]]; do
+                            PROGRESS_STATUS="旧バージョンをバックアップ中"
+                            SPINNER
+                            mv ./lib/extensions/${IE_XT}.sh ./lib/extensions/old/old_${IE_XT}.sh
+                        done
                         echo "ダウンロードを開始します。"
-                        echo "DOWNLOADURL: $EXDOWNLOAD"
-                        wget -q $EXDOWNLOAD
-                        INPUT_EXTENSION_NAME="$IE_XT"
-                        extension_import
+                        wget -q $EXDOWNLOAD -O ./lib/extensions/${IE_XT}.sh
                         #バージョン情報を更新
                         sed -i -e 's/INT_EXT'$COUNT'="'$INT_EXT'"/INT_EXT'$COUNT'="'$NEWVERSION'"/' ./assets/extension.txt
-                        #HEAD情報を更新する
-                        sed -i -e 's/IEHE_AD'$COUNT'="'$IEHE_AD'"/IEHE_AD'$COUNT'="'$NEWEXTHEAD'"/' ./assets/extension.txt
-                        #BODY情報を更新する
-                        sed -i -e 's/BO_DY'$COUNT'="'$BO_DY'"/BO_DY'$COUNT'="'$NEWEXTBODY'"/' ./assets/extension.txt
-                        #ダウンロード処理
-                        #バージョンのファイルを変更
                         ;;
                     [nN])
                         echo "キャンセルしました。"
                         ;;
                     esac
+                    else
+                    echo "更新は存在しません。"
                 fi
-                #rm -r ./newversion.txt
+                rm -r ./newversion.txt
             done
             ;;
-        settings) ;;
-        donwload) ;;
+        uninstall)
+            echo "拡張機能をアンインストールします。"
+        ;;
+        donwload)
+            echo "クラウドから拡張機能をダウンロードします"
+        ;;
         esac
         ;;
     esac
@@ -767,10 +765,10 @@ discord)
         read -p ">" INPUT_DATA
         case "$INPUT_DATA" in
         eew)
-            echo "■ start   | eewBotをスタートします"
+            . ./lib/main/discord/eew.sh
             ;;
         jmusic)
-            . ./lib/main/jmusic.sh
+            . ./lib/main/discord/jmusic.sh
             ;;
         esac
     done
@@ -790,6 +788,7 @@ discord)
     echo -e "       └   \033[0;31muse\033[1;39m: 拡張機能を使用します"
     echo -e "       └   \033[0;31mlist\033[1;39m: 拡張機能の一覧を表示します"
     echo -e "       └   \033[0;31mimport\033[1;39m: 拡張機能をインポートします"
+    echo -e "       └   \033[0;31mvcheck\033[1;39m: 拡張機能の更新を確認 /更新 します"
     echo -e "\033[0;31mmc\033[1;39m: Minecraftに関する機能を開始します"
     echo -e "   └   \033[0;31msrce\033[1;39m: サーバーを作成します"
     echo -e "   └   \033[0;31msrmt\033[1;39m: サーバーを管理します"
@@ -797,7 +796,9 @@ discord)
     echo -e "   └   \033[0;31mitst\033[1;39m: サーバーリストをインポートします"
     echo -e "\033[0;31mdiscord\033[1;39m: Discordに関する機能を開始します"
     echo -e "   └   \033[0;31meew\033[1;39m: eewBotをスタートします"
-    echo -e "   └   \033[0;31mjmusic\033[1;39m: JmusiBotをスタートします"
+    echo -e "       └   \033[0;31mstart\033[1;39m: EEWBotを起動します"
+    echo -e "   └   \033[0;31mjmusic\033[1;39m: JMusiBotをスタートします"
+    echo -e "       └   \033[0;31mstart\033[1;39m: JMusicBotを起動します"
 
     ;;
 esac

@@ -6,8 +6,7 @@
 #このファイルが破損するとほぼ全ての動作が不安定になります。
 
 #INTSLバージョン情報
-INTVERSIONHEAD="1"
-INTVERSIONBODY="00"
+INTVERSION="100"
 INTEDITION="linux"
 #INTURL="https://dev.akarinext.org/yupix/INTSL/-/archive/$INTVERSION-$INTEDITION/INTSL-$INTVERSION-INTEDITION.zip"
 INTREPOURL="https://repo.akarinext.org/"
@@ -16,25 +15,31 @@ INTREPOURL="https://repo.akarinext.org/"
 JMUSIC_VERSION="027"
 EDITION="Linux"
 ProcessName="JMusicBot-$JMUSIC_VERSION-$EDITION.jar"
+FILE="./discord/jmusic/"
+JAR="./discord/jmusic/JMusicBot-$JMUSIC_VERSION-$EDITION.jar"
+CONFIGFILE="./discord/music/config.txt"
+OUTDATADIRECTORY="./assets/outdate.txt"
 
-#SYSTEM関連
+#EEWBOT関係
+EEW_VERSION="207"
+EEWFILE="./discord/eew/"
+JAR="./discord/eew/eewbot-$EEW_VERSION.jar"
+EEW_SYSTEM_FILE="./discord/eew"
+
+#SYSTEM関係
 SCREEN_NAME=test
 USER=$(whoami)
+
 
 chars="/-\|"
 
 #リトライ上限
 RETRYMAX="3"
 
-#ファイル関連
-FILE="./discord/jmusic/"
-JAR="./discord/jmusic/JMusicBot-$JMUSIC_VERSION-$EDITION.jar"
+
 PASSWORDDILECTORY="./assets/password.txt"
 AMBSETTINGS="./assets/settings.txt"
 SYSTEMFILEMUSIC="./discord/jmusic"
 SYSTEMFILE="discord"
-SYSTEMFILE="discord"
 SYSTEMMV="./discrod/musicbot/"
-CONFIGFILE="./discord/music/config.txt"
-OUTDATADIRECTORY="./assets/outdate.txt"
 #------------------------------------------------------------------------------#
