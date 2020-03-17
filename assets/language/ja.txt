@@ -1,4 +1,38 @@
 #------------------------------------------------------------------------------#
+#新しくメッセージの作り直し
+##アウトプット系メッセージ
+OUTPUT_NOW_ME="アウトプット中..."
+OUTPUT_SUCCESS_ME="アウトプットに成功しました。"
+
+##アップデート系メッセージ
+UPDATE_START_ME="アップデートを開始します。"
+NEW_VERSION_EXISTS="新しいバージョンが存在します"
+VERSION_UPDATE_SUCCESS_ME="バージョンアップに成功"
+
+##ファイル系メッセージ
+FILE_DOWNLOAD_CHECK_ME="ファイルをダウンロードしますか?"
+USE_POSSIBLE_ME="使用可能 (Y)es (N)o default(Y)es"
+DATA_DOWNLOAD_NOW_ME="データのダウンロード中"
+
+##ダウンロード系メッセージ
+DONWLOAD_SUCCESS_ME="ダウンロードに成功"
+DONWLOAD_FAILED_ME="ファイルのダウンロードに失敗しました。"
+
+##設定系メッセージ
+CHANGED_SETTINGS_ME="設定を変更しました。"
+
+##開発者系メッセージ
+DEV_WELCOME_ME="ようこそ"
+
+##マイクラサーバー系
+INPUT_MC_SERVER_TYPE_ME="サーバータイプを入力してください。"
+
+##サービス系メッセージ
+MISSING_INPUT_DATA_ME="(Y)es or (N)o を入力してください"
+END_THE_SERVICE_ME="サービスを終了します。"
+
+
+
 #メッセージ関係
 BOTSTART="Music Bot is starting!!"
 ENDSERVICE="サービスを終了します..."

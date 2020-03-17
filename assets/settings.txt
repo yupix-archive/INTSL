@@ -1,32 +1,32 @@
 #初回起動時要設定
-firststart="1"
+firststart="0"
+
+#言語
+USER_LANGUAGE="ja"
 
 #開発者機能の初ログイン時用
-first_dev_login="0"
+first_dev_login="1"
 
-#BOTを起動した際にVercheckを走らせるかどうか (default = y)
+#Projectを使用する際毎回最新バージョンを確認するかどうか (default = y)
 setting_VersionCheck="y"
 
+#spigotのbuild時実行環境をリセットするか否か (default=y)
+setting_resetspigot="y"
+
+#Discord系
+#この設定は現在使用されておらず、使用することができません。
 #BOTを起動した際に招待リンクを表示するかどうか (default = y)
 setting_botinvite=""
 
 #BOTを起動した際にTOKEN等の情報を更新するかどうか (default = y)
 setting_outputdata=""
 
-#バックアップを行うか否か (default = y)
-setting_backuptime=""
-
-#バックアップの出力先(default= ../)
-
-#spigotのbuild時実行環境をリセットするか否か (default=y)
-setting_resetspigot="y"
-
 #誤っても変更しないでください。
 #この行を変更するとほぼ確実にきちんとした動作が行えなくなります。
 #理由としてはこれは本体の特定の行にテキストを追加する際に使用する変数のため、
 #きちんと動作する所を予め確認してから変更しないと、行の間に挿入されてしまい、おかしいことになります。
 #8
-SERVERLANE="8"
+SERVERLANE="10"
 #上と同様
 #default(2)
 EXSTENSIONLANE="2"

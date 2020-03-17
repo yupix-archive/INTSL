@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 echo "サーバーを起動する際のコマンドを指定してください"
-read -p ">" INPUT_SERVER_NAME
+if [[ -z "$INPUT_SERVER_NAME" ]]; then
+    read -p ">" INPUT_SERVER_NAME
+fi
 mkdir $INPUT_SERVER_NAME
 mc_donwload_version="$INPUT_SERVER_VERSION"
 if [[ $SERVER_EDITION = official ]]; then

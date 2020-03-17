@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 while :; do
-    read -p ">" INPUT_SERVER_VERSION
+VARIABLE_CHECK
+    echo "$INPUT_SERVER_VERSION"
+    if [[ -z $INPUT_SERVER_VERSION ]]; then
+        read -p ">" INPUT_SERVER_VERSION
+    fi
     case $INPUT_SERVER_VERSION in
     1.2.5)
         JAR_URL="https://launcher.mojang.com/v1/objects/d8321edc9470e56b8ad5c67bbd16beba25843336/server.jar"

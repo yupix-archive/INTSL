@@ -2,7 +2,6 @@
 #------------------------------------------------------------------------------#
 #外部ファイル読み込み
 . ./assets/outdata.txt
-. ./assets/language/ja.txt
 . ./assets/permissions.txt
 . ./assets/commands.txt
 . ./assets/variable.txt
@@ -12,6 +11,7 @@
 . ./version.txt
 . ./assets/userdata/allsettings.txt
 . ./assets/password.txt
+. ./assets/language/$USER_LANGUAGE.txt
 #------------------------------------------------------------------------------#
 target="$FILE/config.txt"
 output=$3
@@ -53,72 +53,124 @@ SERVER_SPIGOTLIST_PATH="./minecraft/versionlist/spigot/"
 SETTING_MAX="5"
 firststart() {
     if [ $firststart = 0 ]; then
-        sed -i -e 's/firststart="'$firststart'"/firststart="'1'"/' ./assets/settings.txt
-        echo "INTSLをインストールしていただきありがとうございます。"
-        echo "本Projectを自分好みに動かすために初期設定を行うことを推奨します"
-        echo "使用可能 (y)es (n)o"
+        echo "INTSLをインストールして頂きありがとうございます。"
+        echo "本Projectのご利用をスムーズにスタートする為に初期設定をする事を推奨します！"
+        echo "$USE_POSSIBLE_ME"
         while :; do
-            read INPUT_DATA
-            if [ $INPUT_DATA = yes ]; then
+            read -p ">" INPUT_DATA
+            INPUT_DATA=${INPUT_DATA:-y}
+            case $INPUT_DATA in
+            [Yy] | [yY][eE][sS])
+                echo "(使用する言語を入力してください。 1/3)"
+                echo "以下が使用可能な言語です。 デフォルト:ja"
+                echo "|ja | en|"
                 while :; do
-                    read -p ">" SETTING_INPUT
-                    if [[ $SETTING_NUMBER != $SETTING_MAX ]]; then
-                        #wget -q number${MODNUMBER} -O $MODNUMBER
-                        SETTING_NUMBER=$((SETTING_NUMBER + 1))
-                        echo "$SETTING_NUMBER"
-                        SETTING_SED="\$ft_sg_sed${SETTING_NUMBER}"
-                    fi
-
-                    if [[ $SETTING_NUMBER = $SETTING_MAX ]]; then
-                        echo "これで初期設定は終わりです、お疲れ様でした。"
-                        echo "この他にもExtension等様々な物の有効化方法が有りますが、詳しくは https://akari.fiid.net/dev/amb/top をご覧ください!"
-                        echo "それでは良いDiscordBotライフを!"
-                        sleep 3
+                    read -p ">" INPUT_LANGUAGE_DATA
+                    INPUT_LANGUAGE_DATA=${INPUT_LANGUAGE_DATA:-ja}
+                    case $INPUT_LANGUAGE_DATA in
+                    [jJ][aA])
+                        LANGUAGE_DATA="ja"
                         break
-                    fi
-
-                    #設定sed用
-                    ft_sg_sed1=$(sed -i -e 's/setting_VersionCheck="'$setting_VersionCheck'"/setting_VersionCheck="'$SETTING_INPUT'"/' ./assets/settings.txt)
-                    ft_sg_sed2=$(sed -i -e 's/setting_botinvite="'$setting_botinvite'"/setting_botinvite="'$SETTING_INPU'"/' ./assets/settings.txt)
-                    ft_sg_sed3=$(sed -i -e 's/setting_outputdata="'$setting_outputdata'"/setting_outputdata="'$SETTING_INPU'"/' ./assets/settings.txt)
-                    ft_sg_sed4=$(sed -i -e 's/setting_backuptime="'$setting_backuptime'"/setting_backuptime="'$SETTING_INPU'"/' ./assets/settings.txt)
-                    ft_sg_sed5=$(sed -i -e 's/setting_resetspigot="'$setting_resetspigot'"/setting_resetspigot="'$SETTING_INPU'"/' ./assets/settings.txt)
-
-                    if [[ $SETTING_NUMBER = 1 ]]; then
-                        echo "#BOTを起動した際にVercheckを走らせるかどうか (default = yes)"
-                    elif [[ $SETTING_NUMBER = 2 ]]; then
-                        echo "BOTを起動した際に招待リンクを表示するかどうか (default = yes)"
-                    fi
-                    if [[ $SETTING_NUMBER = 3 ]]; then
-                        echo "BOTを起動した際にTOKEN等の情報を更新するかどうか (default = yes)"
-                    elif [[ $SETTING_NUMBER = 4 ]]; then
-                        echo "バックアップを行うか否か (default = yes)"
-                    fi
-                    case $SETTING_INPUT in
-                    [y])
-
-                        echo "$SETTING_SED"
-                        eval $SETTING_SED
-                        echo "設定を変更しました。"
                         ;;
-                    [n])
-                        echo "設定を変更しました。"
+                    [eE][nN])
+                        LANGUAGE_DATA="en"
+                        break
                         ;;
                     *)
-                        echo "(y)es or (n)o を入力してください。"
+                        echo "存在しない言語または未対応の言語です。"
                         ;;
                     esac
                 done
-                break
-            elif [ $INPUT_DATA = n ]; then
-                echo "キャンセルしました!"
-                echo "自動的に元の動作を行います。"
-                break
-            else
-                echo "(y)es or (n)o を入力してください"
-            fi
-        done
+                #言語設定を書き換え
+                sed -i -e 's/USER_LANGUAGE="'$USER_LANGUAGE'"/USER_LANGUAGE="'$LANGUAGE_DATA'"/' ./assets/settings.txt
+                #再読み込み
+                . ./assets/settings.txt
+                #言語を変更できているかチェック
+                if [[ $LANGUAGE_DATA = $USER_LANGUAGE ]]; then
+                    echo "言語を${LANGUAGE_DATA}に変更しました"
+                else
+                    echo "予期せぬ動作により言語の設定に失敗しました。"
+                    echo "項目をスキップします。"
+                fi
 
+                #STEP2
+                echo "(Projectを使用する際毎回最新バージョンを確認するかどうか 2/3)"
+                echo "$USE_POSSIBLE_ME"
+                while :; do
+                    read -p ">" INPUT_VERSION_CHECK_DATA
+                    INPUT_VERSION_CHECK_DATA=${INPUT_VERSION_CHECK_DATA:-y}
+                    case $INPUT_VERSION_CHECK_DATA in
+                    [Yy] | [yY][eE][sS])
+                        echo "y"
+                        VERSION_CHECK_DATA="y"
+                        break
+                        ;;
+                    [nN] | [nN][oO])
+                        echo "n"
+                        VERSION_CHECK_DATA="n"
+                        break
+                        ;;
+                    esac
+                done
+                sed -i -e 's/setting_VersionCheck="'$setting_VersionCheck'"/setting_VersionCheck="'$VERSION_CHECK_DATA'"/' ./assets/settings.txt
+                #再読み込み
+                . ./assets/settings.txt
+                #言語を変更できているかチェック
+                if [[ $VERSION_CHECK_DATA = $setting_VersionCheck ]]; then
+                    echo "設定を${VERSION_CHECK_DATA}に変更しました"
+                else
+                    echo "予期せぬ動作により設定の変更に失敗しました。"
+                    echo "項目をスキップします。"
+                fi
+
+                #STEP3
+                echo "(SpigotのBuild時,前回の環境をリセットするかどうか 3/3)"
+                echo "$USE_POSSIBLE_ME"
+                while :; do
+                    read -p ">" INPUT_RESET_SPIGOT_DATA
+                    INPUT_RESET_SPIGOT_DATA=${INPUT_RESET_SPIGOT_DATA:-y}
+                    case $INPUT_RESET_SPIGOT_DATA in
+                    [Yy] | [yY][eE][sS])
+                        echo "y"
+                        RESET_SPIGOT_DATA="y"
+                        break
+                        ;;
+                    [nN] | [nN][oO])
+                        echo "n"
+                        RESET_SPIGOT_DATA="n"
+                        break
+                        ;;
+                    esac
+                    sed -i -e 's/setting_resetspigot="'$setting_resetspigot'"/setting_resetspigot="'$RESET_SPIGOT_DATA'"/' ./assets/settings.txt
+                    #再読み込み
+                    . ./assets/settings.txt
+                    #言語を変更できているかチェック
+                    if [[ $RESET_SPIGOT_DATA = $setting_resetspigot ]]; then
+                        echo "設定を${RESET_SPIGOT_DATA}に変更しました"
+                        break
+                    else
+                        echo "予期せぬ動作により設定の変更に失敗しました。"
+                        echo "項目をスキップします。"
+                        break
+                    fi
+                done
+                sed -i -e 's/firststart="'$firststart'"/firststart="'1'"/' ./assets/settings.txt
+                echo "全ての設定が終了しました! ご協力いただきありがとうございます!"
+                echo "3秒後に元の動作に戻ります"
+                sleep 3
+                break
+                ;;
+            [nN] | [nN][oO])
+                echo "n"
+                echo "設定を変更する場合は、いつでもsettingコマンドで変更可能です!"
+                sed -i -e 's/firststart="'$firststart'"/firststart="'1'"/' ./assets/settings.txt
+                break
+                ;;
+            *)
+                echo "$MISSING_INPUT_DATA_ME"
+                ;;
+            esac
+        done
     fi
 }
 
@@ -136,7 +188,7 @@ serverlistoutput() {
             rm -r OUTPUTSERVERLIST.txt
         else
             while [[ ! -e OUTPUTSERVERLIST.txt ]]; do
-                PROGRESS_STATUS="アウトプット中..."
+                PROGRESS_STATUS="$OUTPUT_NOW_ME"
                 cat ./lib/main/server_list.sh | awk '/STARTSERVERLIST/,/ENDSERVERLIST/' >OUTPUTSERVERLIST.txt
                 sed -i -e '1,1d' OUTPUTSERVERLIST.txt
                 #先頭削除
@@ -149,7 +201,7 @@ serverlistoutput() {
             break
         fi
     done
-    echo "アウトプットに成功しました。"
+    echo "$OUTPUT_SUCCESS_ME"
 }
 
 #INTSLGETV() {
@@ -169,21 +221,21 @@ vcheck() {
                 . ./assets/new-version.txt
                 NEWINTSLGETV=$(echo "$NEWVERSION" | sed -e 's/\(.\)/\1./'g | sed -e 's/.$//')
                 if [[ $NEWVERSION -gt ${INTVERSION} ]]; then
-                    echo "新しいバージョンが存在します            "
+                    echo "$NEW_VERSION_EXISTS            "
                     echo -e "\e[31mCurrent: INTSL-$INTVERSION\e[m ⇛  \e[32mNew: INTSL-$NEWINTSLGETV\e[m"
-                    echo "ファイルをダウンロードしますか?"
-                    echo "使用可能 (Y)es (N)o default(Y)es"
+                    echo "$FILE_DOWNLOAD_CHECK_ME"
+                    echo "$USE_POSSIBLE_ME"
                     read -p ">" INPUT_DATA
                     INPUT_DATA=${INPUT_DATA:y}
                     case $INPUT_DATA in
                     [yY])
-                        echo "アップデートを開始します。"
+                        echo "$UPDATE_START_ME"
                         while [[ ! -e ./INTSL-${NEWINTSLGETV}-${INTEDITION}.zip ]]; do
-                            PROGRESS_STATUS="データのダウンロード中"
+                            PROGRESS_STATUS="$DATA_DOWNLOAD_NOW_ME"
                             SPINNER
                             wget -q https://repo.akarinext.org/pub/intsl/${NEWINTSLGETV}/INTSL-${NEWINTSLGETV}-${INTEDITION}.zip
                         done
-                        echo "ダウンロードに成功"
+                        echo "$DONWLOAD_SUCCESS_ME"
                         serverlistoutput
                         unzip -qonu ./INTSL-${NEWINTSLGETV}-${INTEDITION}.zip
                         if [[ -e INTSL-${NEWINTSLGETV}-${INTEDITION} ]]; then
@@ -210,7 +262,7 @@ vcheck() {
                                 GETLINE=$(sed -n ${COUNT}P news.txt)
                                 echo "$GETLINE"
                             done
-                            echo "バージョンアップに成功"
+                            echo "$VERSION_UPDATE_SUCCESS_ME"
 
                         fi
                         ;;
@@ -226,7 +278,7 @@ vcheck() {
                     break
                 fi
             else
-                echo "ファイルのダウンロードに失敗しました。"
+                echo "$DONWLOAD_FAILED_ME"
                 echo "考えられる理由として、RepositoryServerがDownしている、又は"
                 echo "ネットの接続が不安定な可能性が有ります。"
                 break
@@ -256,11 +308,11 @@ CHANGE_SERVER_PROCESS_NAME() {
                 ;;
             [nN])
                 echo "変更をキャンセルしました。"
-                echo "サービスを終了します。"
+                echo "$"
                 exit 0
                 ;;
             *)
-                echo "(Y)es または (N)o を入力してください"
+                echo "$MISSING_INPUT_DATA_ME"
                 ;;
             esac
         fi
@@ -281,11 +333,11 @@ CHANGE_SERVER_JAR_NAME() {
                 ;;
             [nN])
                 echo "変更をキャンセルしました。"
-                echo "サービスを終了します。"
+                echo "$END_THE_SERVICE_ME"
                 exit 0
                 ;;
             *)
-                echo "(Y)es または (N)o を入力してください"
+                echo "$MISSING_INPUT_DATA_ME"
                 ;;
             esac
         fi
@@ -310,11 +362,11 @@ CHANGE_SERVER_MIN_MEMORY() {
                         ;;
                     [nN])
                         echo "変更をキャンセルしました。"
-                        echo "サービスを終了します。"
+                        echo "$END_THE_SERVICE_ME"
                         exit 0
                         ;;
                     *)
-                        echo "(Y)es または (N)o を入力してください"
+                        echo "$MISSING_INPUT_DATA_ME"
                         ;;
                     esac
                 else
@@ -346,11 +398,11 @@ CHANGE_SERVER_MAX_MEMORY() {
                         ;;
                     [nN])
                         echo "変更をキャンセルしました。"
-                        echo "サービスを終了します。"
+                        echo "$END_THE_SERVICE_ME"
                         exit 0
                         ;;
                     *)
-                        echo "(Y)es または (N)o を入力してください"
+                        echo "$MISSING_INPUT_DATA_ME"
                         ;;
                     esac
                 else
@@ -476,16 +528,75 @@ EOF
 WELCOME_DEV_MESSAGE() {
     if [ -n "$YOURNAME" ]; then
         if [ -n "$KEISHOU" ]; then
-            echo -e '\e[1;37;32mようこそ'$YOURNAME$KEISHOU'\e[0m'
+            echo -e '\e[1;37;32m'$DEV_WELCOME_ME''$YOURNAME$KEISHOU'\e[0m'
         else
-            echo -e '\e[1;37;32mようこそ'$YOURNAME様'\e[0m'
+            echo -e '\e[1;37;32m'$DEV_WELCOME_ME''$YOURNAME様'\e[0m'
         fi
     else
         if [ -n "$KEISHOU" ]; then
-            echo -e '\e[1;37;32mようこそ開発者'$KEISHOU'\e[0m'
+            echo -e '\e[1;37;32m'$DEV_WELCOME_ME'開発者'$KEISHOU'\e[0m'
         else
-            echo -e '\e[1;37;32mようこそ開発者様\e[0m'
+            echo -e '\e[1;37;32m'$DEV_WELCOME_ME'開発者様\e[0m'
         fi
+    fi
+}
+MC_SERVER_CREATE() {
+    if [[ -z "$INPUT_SERVER_TYPE" ]]; then
+        echo "$INPUT_MC_SERVER_TYPE_ME"
+        read -p ">" INPUT_SERVER_TYPE
+    fi
+    case $INPUT_SERVER_TYPE in
+    [1])
+        SERVER_EDITION="official"
+        echo "OfficialServer"
+        echo -e "VersionList: | \033[1;37m1.2.5\033[0;39m | \033[1;37m1.3.1\033[0;39m | \033[1;37m1.3.2\033[0;39m | \033[1;37m1.4.2\033[0;39m | \033[1;37m1.4.4\033[0;39m | \033[1;37m1.4.5\033[0;39m | \033[1;37m1.4.6\033[0;39m | \033[1;37m1.4.7\033[0;39m | \033[1;37m1.5.2\033[0;39m | \033[1;37m1.5.2\033[0;39m | \033[1;37m1.6.1\033[0;39m | \033[1;37m1.6.2\033[0;39m | \033[1;37m1.6.4\033[0;39m |"
+        echo -e "| \033[1;37m1.7.2\033[0;39m | \033[1;37m1.7.5\033[0;39m | \033[1;37m1.7.6\033[0;39m | \033[1;37m1.7.7\033[0;39m | \033[1;37m1.7.8\033[0;39m | \033[1;37m1.7.9\033[0;39m | \033[1;37m1.7.10\033[0;39m | \033[1;37m1.8\033[0;39m | \033[1;37m1.8.1\033[0;39m | \033[1;37m1.8.2\033[0;39m | \033[1;37m1.8.3\033[0;39m | \033[1;37m1.8.4\033[0;39m | \033[1;37m1.8.5\033[0;39m | \033[1;37m1.8.6\033[0;39m | \033[1;37m1.8.7\033[0;39m | \033[1;37m1.8.8\033[0;39m | \033[1;37m1.8.9\033[0;39m |"
+        echo -e "| \033[1;37m1.9\033[0;39m | \033[1;37m1.9.1\033[0;39m | \033[1;37m1.9.2\033[0;39m | \033[1;37m1.9.3\033[0;39m | \033[1;37m1.9.4\033[0;39m | \033[1;37m1.10\033[0;39m | \033[1;37m1.10.1\033[0;39m | \033[1;37m1.10.2\033[0;39m | \033[1;37m1.11\033[0;39m | \033[1;37m1.11.1\033[0;39m | \033[1;37m1.11.2\033[0;39m | \033[1;37m1.12\033[0;39m | \033[1;37m1.12.1\033[0;39m | \033[1;37m1.12.2\033[0;39m | \033[1;37m1.13\033[0;39m | \033[1;37m1.13.1\033[0;39m | \033[1;37m1.13.2\033[0;39m |"
+        echo -e "| \033[1;37m1.14\033[0;39m | \033[1;37m1.14.1\033[0;39m | \033[1;37m1.14.2\033[0;39m | \033[1;37m1.14.3\033[0;39m | \033[1;37m1.14.4\033[0;39m | \033[1;37m1.15\033[0;39m | \033[1;37m1.15.1\033[0;39m | \033[1;37m1.15.2\033[0;39m |"
+        . ./lib/minecraft/officialserver.sh
+        . ./lib/minecraft/olsr_dr.sh
+        exit 0
+        ;;
+    [2])
+        SERVER_EDITION="paper"
+        echo "PaperServer"
+        echo -e "VersionList: | \033[1;37m1.7.10\033[0;39m | \033[1;37m1.8.8\033[0;39m | \033[1;37m1.9.4\033[0;39m | \033[1;37m1.10.2\033[0;39m | \033[1;37m1.11.2\033[0;39m | \033[1;37m1.12.2\033[0;39m | \033[1;37m1.13.2\033[0;39m | \033[1;37m1.14.4\033[0;39m | \033[1;37m1.15.2\033[0;39m |"
+        . ./lib/minecraft/paperserver.sh
+        . ./lib/minecraft/prsr_dr.sh
+        ;;
+    [3])
+        SERVER_EDITION="spigot"
+        echo "SpigotServer"
+        . ./lib/minecraft/spigotserver.sh
+        . ./lib/minecraft/stsr_dr.sh
+        ;;
+    [4])
+        SERVER_EDITION="forge"
+        echo "forgeserver"
+        ;;
+    *)
+        echo "数字を入力してください。"
+        ;;
+    esac
+}
+MC_SERVER_IMPORT() {
+    if [[ -e OUTPUTSERVERLIST.txt ]]; then
+        MAXLINE=$(cat OUTPUTSERVERLIST.txt | wc -l)
+        while [[ $COUNT != $MAXLINE ]]; do
+            . ./assets/settings.txt
+            PROGRESS_STATUS="進捗 $COUNT / $MAXLINE"
+            SPINNER
+            COUNT=$(($COUNT + 1))
+            GETLINE=$(sed -n ${COUNT}P OUTPUTSERVERLIST.txt)
+            sed -i ''$SERVERLANE'i '"$GETLINE"'' ./lib/main/server_list.sh
+            #サーバーの追加する行変更
+            NEWSERVERLANE=$((SERVERLANE + 1))
+            sed -i -e 's/SERVERLANE="'$SERVERLANE'"/SERVERLANE="'$NEWSERVERLANE'"/' ./assets/settings.txt
+        done
+        echo -e "\e[1;37;32mIMPORT SUCCESS\e[0m"
+    else
+        echo "OUTPUTデータが存在しません。"
+        echo "データをOUTPUTしてから再度実行してください。"
     fi
 }
 #------------------------------------------------------------------------------#
@@ -495,9 +606,29 @@ main)
     echo "MAIN SYSTEM"
     echo "■ extension | 拡張機能を管理できます"
     echo "■ dev       | 開発者向け機能を使用できます"
+    echo "■ report   | INTSLに欲しい機能や不具合を報告できます。"
     read -p ">" INPUT_DATA
     case $INPUT_DATA in
     #開発者向け機能
+    report)
+        echo "INTSLに欲しい機能、又は不具合を報告できます。"
+        echo "要望(request) | 不具合(bug)"
+        read -p ">" INPUT_DATA
+        case $INPUT_DATA in
+        request)
+            echo "要望を簡潔にまとめて入力してください。"
+            read -p ">" INPUT_REQUEST_DATA
+            curl -X POST --data 'request='$INPUT_REQUEST_DATA'' http://api.akarinext.org:3000/request
+            echo
+            ;;
+        bug)
+            echo "バグの概要などを簡潔にまとめ、入力してください。"
+            read -p ">" INPUT_BUG_DATA
+            #curl -X POST --data 'bug='$INPUT_BUG_DATA'' http://api.akarinext.org:3000/request
+            echo
+            ;;
+        esac
+        ;;
     dev)
         firststart
         DEVELOPER_LOGIN
@@ -510,15 +641,14 @@ main)
         read -p ">" dev
         case "$dev" in
         [1])
-            echo "呼んでほしい名前を書いてください"
-            echo "入力待ち..."
+            echo "呼んでほしい名前を入力してください。"
             read -p ">" INPUT_YOURNAME
             sed -i -e 's/YOURNAME="'$YOURNAME'"/YOURNAME="'$INPUT_YOURNAME'"/' ./assets/userdata/allsettings.txt
             echo "名前を覚えましたよ! $INPUT_YOURNAMEさん!"
             ;;
         [2])
             echo "1. カスタム"
-            echo "読んでほしい敬称を入力してください。"
+            echo "呼んでほしい敬称を入力してください。"
             read -p ">" dev2
             case "$dev2" in
             [1])
@@ -531,8 +661,21 @@ main)
             echo "開発者ログインをする際のパスワードを変更します。"
             echo "現在のパスワードを入力してください。"
             read -p ">" CURRENT_DEV_PASSWORD
+            . ./assets/password.txt
             case $CURRENT_DEV_PASSWORD in
-            $PASSWORD) ;;
+            $password)
+                echo "パスワードを変更しますか?"
+                echo "(Y)es / (N)o"
+                read -p ">" INPUT_Y_N_DATA
+                case $INPUT_Y_N_DATA in
+                [yY])
+                    echo ""
+                    ;;
+                [nN])
+                    echo ""
+                    ;;
+                esac
+                ;;
             esac
             ;;
         esac
@@ -629,7 +772,7 @@ main)
                         echo "キャンセルしました。"
                         ;;
                     esac
-                    else
+                else
                     echo "更新は存在しません。"
                 fi
                 rm -r ./newversion.txt
@@ -637,10 +780,12 @@ main)
             ;;
         uninstall)
             echo "拡張機能をアンインストールします。"
-        ;;
+            echo "この機能は現在未完成です。"
+            ;;
         donwload)
             echo "クラウドから拡張機能をダウンロードします"
-        ;;
+            echo "この機能は現在未完成です。"
+            ;;
         esac
         ;;
     esac
@@ -653,6 +798,25 @@ vcheck)
 mc)
     firststart
     while :; do
+        #SRCE用
+        if [[ $2 = srce ]]; then
+            INPUT_SERVER_TYPE="$3"
+            if [[ -n $4 ]]; then
+                INPUT_SERVER_VERSION="$4"
+            fi
+            INPUT_SERVER_NAME="$5"
+            MC_SERVER_CREATE
+        #SRMT用
+        elif [[ $2 = srmt ]]; then
+            serverstartlist="$3"
+            . ./lib/main/server_list.sh
+        elif [[ $2 = otst ]]; then
+            serverlistoutput
+        #IMPORT用
+        elif [[ $2 = import ]]; then
+            MC_SERVER_IMPORT
+            exit 0
+        fi
         echo "Minecraft"
         echo "■ srce | サーバーを作成します。"
         echo "■ srmt | サーバーを起動します。"
@@ -666,41 +830,9 @@ mc)
             echo "❘   3. SpigotServer   4. ForgeServer   ❘"
             echo "❘   5. SpongeServer   6. BungeeCord    ❘"
             echo "❘   7. WaterFall      8. Travertine    ❘"
-            read INPUT_SERVER_TYPE
-            case $INPUT_SERVER_TYPE in
-            [1])
-                SERVER_EDITION="official"
-                echo "OfficialServer"
-                echo -e "VersionList: | \033[1;37m1.2.5\033[0;39m | \033[1;37m1.3.1\033[0;39m | \033[1;37m1.3.2\033[0;39m | \033[1;37m1.4.2\033[0;39m | \033[1;37m1.4.4\033[0;39m | \033[1;37m1.4.5\033[0;39m | \033[1;37m1.4.6\033[0;39m | \033[1;37m1.4.7\033[0;39m | \033[1;37m1.5.2\033[0;39m | \033[1;37m1.5.2\033[0;39m | \033[1;37m1.6.1\033[0;39m | \033[1;37m1.6.2\033[0;39m | \033[1;37m1.6.4\033[0;39m |"
-                echo -e "| \033[1;37m1.7.2\033[0;39m | \033[1;37m1.7.5\033[0;39m | \033[1;37m1.7.6\033[0;39m | \033[1;37m1.7.7\033[0;39m | \033[1;37m1.7.8\033[0;39m | \033[1;37m1.7.9\033[0;39m | \033[1;37m1.7.10\033[0;39m | \033[1;37m1.8\033[0;39m | \033[1;37m1.8.1\033[0;39m | \033[1;37m1.8.2\033[0;39m | \033[1;37m1.8.3\033[0;39m | \033[1;37m1.8.4\033[0;39m | \033[1;37m1.8.5\033[0;39m | \033[1;37m1.8.6\033[0;39m | \033[1;37m1.8.7\033[0;39m | \033[1;37m1.8.8\033[0;39m | \033[1;37m1.8.9\033[0;39m |"
-                echo -e "| \033[1;37m1.9\033[0;39m | \033[1;37m1.9.1\033[0;39m | \033[1;37m1.9.2\033[0;39m | \033[1;37m1.9.3\033[0;39m | \033[1;37m1.9.4\033[0;39m | \033[1;37m1.10\033[0;39m | \033[1;37m1.10.1\033[0;39m | \033[1;37m1.10.2\033[0;39m | \033[1;37m1.11\033[0;39m | \033[1;37m1.11.1\033[0;39m | \033[1;37m1.11.2\033[0;39m | \033[1;37m1.12\033[0;39m | \033[1;37m1.12.1\033[0;39m | \033[1;37m1.12.2\033[0;39m | \033[1;37m1.13\033[0;39m | \033[1;37m1.13.1\033[0;39m | \033[1;37m1.13.2\033[0;39m |"
-                echo -e "| \033[1;37m1.14\033[0;39m | \033[1;37m1.14.1\033[0;39m | \033[1;37m1.14.2\033[0;39m | \033[1;37m1.14.3\033[0;39m | \033[1;37m1.14.4\033[0;39m | \033[1;37m1.15\033[0;39m | \033[1;37m1.15.1\033[0;39m | \033[1;37m1.15.2\033[0;39m |"
-                . ./lib/minecraft/officialserver.sh
-                . ./lib/minecraft/olsr_dr.sh
-                exit 0
-                ;;
-            [2])
-                SERVER_EDITION="paper"
-                echo "PaperServer"
-                echo -e "VersionList: | \033[1;37m1.7.10\033[0;39m | \033[1;37m1.8.8\033[0;39m | \033[1;37m1.9.4\033[0;39m | \033[1;37m1.10.2\033[0;39m | \033[1;37m1.11.2\033[0;39m | \033[1;37m1.12.2\033[0;39m | \033[1;37m1.13.2\033[0;39m | \033[1;37m1.14.4\033[0;39m | \033[1;37m1.15.2\033[0;39m |"
-                . ./lib/minecraft/paperserver.sh
-                . ./lib/minecraft/prsr_dr.sh
-                ;;
-            [3])
-                SERVER_EDITION="spigot"
-                echo "SpigotServer"
-                . ./lib/minecraft/spigotserver.sh
-                . ./lib/minecraft/stsr_dr.sh
-                ;;
-            [4])
-                SERVER_EDITION="forge"
-                echo "forgeserver"
-                ;;
-            *)
-                echo "数字を入力してください。"
-                ;;
-            esac
+            MC_SERVER_CREATE
             ;;
+        #未完成
         gcst)
             read -p ">" INPUT_DATA
             case $INPUT_DATA in
@@ -725,24 +857,7 @@ mc)
             esac
             ;;
         import)
-            if [[ -e OUTPUTSERVERLIST.txt ]]; then
-                MAXLINE=$(cat OUTPUTSERVERLIST.txt | wc -l)
-                while [[ $COUNT != $MAXLINE ]]; do
-                    . ./assets/settings.txt
-                    PROGRESS_STATUS="進捗 $COUNT / $MAXLINE"
-                    SPINNER
-                    COUNT=$(($COUNT + 1))
-                    GETLINE=$(sed -n ${COUNT}P OUTPUTSERVERLIST.txt)
-                    sed -i ''$SERVERLANE'i '"$GETLINE"'' ./linux.sh
-                    #サーバーの追加する行変更
-                    NEWSERVERLANE=$((SERVERLANE + 1))
-                    sed -i -e 's/SERVERLANE="'$SERVERLANE'"/SERVERLANE="'$NEWSERVERLANE'"/' ./assets/settings.txt
-                done
-                echo -e "\e[1;37;32mIMPORT SUCCESS\e[0m"
-            else
-                echo "OUTPUTデータが存在しません。"
-                echo "データをOUTPUTしてから再度実行してください。"
-            fi
+            MC_SERVER_IMPORT
             ;;
         otst)
             serverlistoutput

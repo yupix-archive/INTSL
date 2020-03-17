@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-echo "管理するサーバーのコマンドを入力してください"
-read -p ">" serverstartlist
+if [[ -z $serverstartlist ]];then
+    echo "管理するサーバーのコマンドを入力してください"
+    read -p ">" serverstartlist
+fi
 case $serverstartlist in
 #STARTSERVERLIST
 
