@@ -3,7 +3,7 @@
 
 # INTSL
 IntegrationShell(統合シェル)
-このProjectは私が元々開発していた[amb](https://github.com/yupix.amb/)Projectを合わせ、
+このProjectは私が元々開発していた[amb](https://github.com/yupix/amb/)Projectを合わせ、
 Minecraftのサーバー作成補助等様々な開発者やサーバー運営者にとって作業の効率化が行える様な物を
 目指しています。
 主な開発元は[ここ](https://dev.akarinext.org/yupix/INTSL)の為更新が遅い可能性があります。
