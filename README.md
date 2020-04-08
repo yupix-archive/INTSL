@@ -1,6 +1,14 @@
 ![IntegrationShell](https://repo.akarinext.org/pub/intsl/intsl.gif "Image")
 [![pipeline status](https://dev.akarinext.org/yupix/INTSL/badges/master/pipeline.svg)](https://dev.akarinext.org/yupix/INTSL/-/commits/master)
 
+# このprojectについて
+このprojectは多くの問題を抱えており、変数名、書き方から等
+すべてを見直すに当たり、結局作り直したほうが早いという結論に至ったため、
+このprojectのgithubでの更新を停止します。
+重大すぎるバグの修正などは [こちら](https://dev.akarinext.org/yupix/intsl)
+で修正します。現在作り直し中のprojectは[こちら](https://dev.akarinext.org/yupix/intsl_v/)からご覧になれます。
+短い間でしたが、intslprojectをご利用、閲覧いただきありがとうございました。
+
 # INTSL
 IntegrationShell(統合シェル)
 このProjectは私が元々開発していた[amb](https://github.com/yupix/amb/)Projectを合わせ、
