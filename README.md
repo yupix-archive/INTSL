@@ -6,7 +6,7 @@
 すべてを見直すに当たり、結局作り直したほうが早いという結論に至ったため、
 このprojectのgithubでの更新を停止します。
 重大すぎるバグの修正などは [こちら](https://dev.akarinext.org/yupix/intsl)
-で修正します。現在作り直し中のprojectは[こちら](https://dev.akarinext.org/yupix/intsl_v/)からご覧になれます。
+で修正します。現在作り直し中のprojectは[こちら](https://dev.akarinext.org/yupix/intsl-v/)からご覧になれます。
 短い間でしたが、intslprojectをご利用、閲覧いただきありがとうございました。
 
 # INTSL
